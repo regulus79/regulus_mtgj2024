@@ -1,9 +1,16 @@
 
 local flats = {
-    {pos = vector.new(0,0,0), size = vector.new(50,50,50)},
+    {pos = vector.new(0,0,0), size = 50, buffer = 50},
+    {pos = vector.new(300,0,0), size = 20, buffer = 20},
+    {pos = vector.new(0,20,500), size = 50, buffer = 50},
 }
 
-
+local paths = {
+    {start = vector.new(0,0,0), dst = vector.new(300,0,0), width = 5},
+    {start = vector.new(0,0,0), dst = vector.new(0,20,500), width = 5},
+    {start = vector.new(300,0,0), dst = vector.new(0,20,500), width = 2},
+    --{start = vector.new(0,0,0), dst = vector.new(-500,20,500), width = 5}
+}
 
 
 local c_stone, c_air, c_dirt
@@ -16,21 +23,58 @@ end)
 
 -- Input is slope squared because it's faster to calcuate and doesn't really matter
 local nonlinearity = function(height, slope_squared)
-    return height * 1 / (1 + 1*slope_squared)
+    return height - 10 * slope_squared
+end
+
+-- Basically stacking two x^3 curves mirrored around x=0.5 to get a smooth transition
+local cubic_interpolation = function(a, b, t)
+    if t < 0 then
+        return a
+    elseif t > 1 then
+        return b
+    else
+        if t < 0.5 then
+            return a + (b-a) * t*t*t * 4
+        else
+            return a + (b-a) * ((t - 1)*(t - 1)*(t - 1) + 0.25) * 4
+        end
+    end
 end
 
 local map_height = function(noisemap, noise2d_idx, x, z)
     local noiseheight = noisemap[noise2d_idx]
     local sqr_distance_from_center = x*x + z*z
-    -- higher powers to distance to get mountains to rise up steeply and abruptly
-    local outer_mountain_height = 1000 *
-        math.floor(sqr_distance_from_center / 1000000) * 
-        math.floor(sqr_distance_from_center / 1000000) * 
-        math.floor(sqr_distance_from_center / 1000000) * 
-        math.floor(sqr_distance_from_center / 1000000) * 
-        math.floor(sqr_distance_from_center / 1000000) * 
-        math.floor(sqr_distance_from_center / 1000000)
-    return noiseheight + outer_mountain_height
+    -- Add mountains around the border of the map
+    local outer_mountain_height = 0
+    if sqr_distance_from_center > 1000*1000 then
+        outer_mountain_height = (sqr_distance_from_center - 1000*1000) ^ 3 / 1000^6 * (noiseheight + 100) * 10 -- Multiplying by a positive version of the noiseheight to get more interesting mountains; better than just adding it.
+    end
+
+    local default_map_height = noiseheight + outer_mountain_height
+    -- Interpolate to flat plain if nearby
+    local flat_height = -math.huge
+    local dist_to_flat = math.huge
+    local flat_buffer = math.huge
+    for _, flatdef in pairs(flats) do
+        local new_dist_to_flat = math.sqrt((x - flatdef.pos.x)*(x - flatdef.pos.x) + (z - flatdef.pos.z)*(z - flatdef.pos.z)) - flatdef.size
+        -- TODO this assumes that no two plains intersect. Maybe fix sometime?
+        if new_dist_to_flat < dist_to_flat then
+            dist_to_flat = new_dist_to_flat
+            flat_height = flatdef.pos.y
+            flat_buffer = flatdef.buffer
+        end
+    end
+    if dist_to_flat < flat_buffer then
+        if dist_to_flat > 0 then
+            -- Interpolate based on distance
+            local t = dist_to_flat / flat_buffer
+            return cubic_interpolation(flat_height, default_map_height, t)
+        else
+            return flat_height
+        end
+    else
+        return default_map_height
+    end
 end
 
 -- NODE PROBABILITIES
@@ -55,6 +99,42 @@ local grass_prob = function(pos, slope_squared)
     return 1
 end
 local snow_prob = function(pos, slope_squared)
+end
+
+local path_prob = function(pos, slope_squared, randomness)
+    pos.y = 0
+    local dist_to_path = math.huge
+    local path_width = 0
+    for i, v in pairs(paths) do
+        local path_start = v.start
+        local path_end = v.dst
+        path_start.y = 0
+        local path_length = (path_end - path_start):length()
+        local path_dir = (path_end - path_start) / path_length
+        local along_path = ((pos - path_start)/path_length):dot(path_dir)
+        if along_path > 0 and along_path < 1 then
+            local path_normal = path_dir:cross(vector.new(0, 1, 0))
+            -- Add some randomness to the path to make it wavy
+            -- Using path index as a seed ot make paths unique
+            local random_offset = path_normal * math.sin(along_path * path_length/30) * 10
+            pos = pos + random_offset * randomness
+
+            local new_dist_to_path = math.abs(path_normal:dot(pos - path_start))
+            if new_dist_to_path < dist_to_path then
+                dist_to_path = new_dist_to_path
+                path_width = v.width
+            end
+        end
+    end
+    if dist_to_path < path_width then
+        if dist_to_path < path_width / 2 then
+            return 1
+        else
+            return (1 - dist_to_path / path_width) * 2
+        end
+    else
+        return 0
+    end
 end
 -- Deep nodes
 local dirt_prob = function(pos, depth, slope_squared)
@@ -88,7 +168,7 @@ local sample_probabilites = function(probs)
 end
 -- Return node based on all probabilites
 local sample_node_probabilities = function(pos, depth, slope_squared, seed)
-    math.randomseed(seed)
+    math.randomseed(seed + pos.x + pos.y*1000 + pos.z*1000000)
     local air = air_prob(pos, depth, slope_squared)
     if math.random() < air then
         return c_air
@@ -97,10 +177,14 @@ local sample_node_probabilities = function(pos, depth, slope_squared, seed)
     local surface = surface_prob(pos, depth, slope_squared)
     if math.random() < surface then
         -- Surface node
-        local probs = {
-            [c_dirt_with_grass] = grass_prob(pos, slope_squared)
-        }
-        return c_dirt_with_grass--sample_probabilites(probs)
+        if math.random() < path_prob(pos, slope_squared, 1) then
+            return c_dirt
+        else
+            local probs = {
+                [c_dirt_with_grass] = grass_prob(pos, slope_squared),
+            }
+            return sample_probabilites(probs)
+        end
     else
         local probs = {
             [c_dirt] = dirt_prob(pos, depth, slope_squared),
