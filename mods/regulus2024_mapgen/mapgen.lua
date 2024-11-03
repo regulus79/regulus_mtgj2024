@@ -1,8 +1,8 @@
 
 local flats = {
-    {pos = vector.new(0,0,0), size = 50, buffer = 50},
-    {pos = vector.new(300,0,0), size = 20, buffer = 20},
-    {pos = vector.new(0,20,500), size = 50, buffer = 50},
+    {pos = vector.new(0,0.4,0), size = 50, buffer = 50},
+    {pos = vector.new(300,0.4,0), size = 20, buffer = 20},
+    {pos = vector.new(0,20.4,500), size = 50, buffer = 50},
 }
 
 local paths = {
@@ -14,13 +14,25 @@ local paths = {
 
 local path_endpoint_interp_length = 20
 
+local grass_blade_nodenames = {
+    "regulus2024_nodes:grassblade1",
+    "regulus2024_nodes:grassblade2",
+}
 
 local c_stone, c_air, c_dirt
+local c_grass_blade_list = {}
+local c_path_nodes_list = {}
 minetest.register_on_mods_loaded(function()
     c_stone =minetest.get_content_id("mapgen_stone")
     c_dirt = minetest.get_content_id("mapgen_dirt")
     c_air = minetest.get_content_id("air")
     c_dirt_with_grass = minetest.get_content_id("mapgen_dirt_with_grass")
+    for _, nodename in pairs(grass_blade_nodenames) do
+        table.insert(c_grass_blade_list, minetest.get_content_id(nodename))
+    end
+    for i = 1, 2 do
+        table.insert(c_path_nodes_list, minetest.get_content_id("regulus2024_nodes:path1_"..i))
+    end
 end)
 
 -- Input is slope squared because it's faster to calcuate and doesn't really matter
@@ -110,17 +122,9 @@ end
 
 
 -- NODE PROBABILITIES
--- Probability of air
-local air_prob = function(pos, depth, slope_squared)
-    if depth < 0 then
-        return 1
-    else
-        return 0
-    end
-end
 -- Probability of being a surface node
 local surface_prob = function(pos, depth, slope_squared)
-    if depth < 1 then
+    if depth < 0.5 and depth >= -0.5 then
         return 1
     else
         return 0
@@ -154,7 +158,28 @@ local path_prob = function(pos, slope_squared)
         return 0
     end
 end
+
+-- On-surface nodes
+local on_surface_prob = function(pos, depth, slope_squared)
+    if depth <= -0.5 and depth >= -1.5 then
+        return 1
+    else
+        return 0
+    end
+end
+local grass_blade_prob = function(pos, slope_squared)
+    return 0.5
+end
+
 -- Deep nodes
+local underground_prob = function(pos, depth, slope_squared)
+    if depth > 0.5 then
+        return 1
+    else
+        return 0
+    end
+end
+
 local dirt_prob = function(pos, depth, slope_squared)
     if depth < 5 then
         return 1
@@ -184,33 +209,47 @@ local sample_probabilites = function(probs)
         end
     end
 end
--- Return node based on all probabilites
+
+-- Return node and its param2 value based on all probabilites
 local sample_node_probabilities = function(pos, depth, slope_squared, seed)
     math.randomseed(seed + pos.x + pos.y*1000 + pos.z*1000000)
-    local air = air_prob(pos, depth, slope_squared)
-    if math.random() < air then
-        return c_air
-    end
 
-    local surface = surface_prob(pos, depth, slope_squared)
-    if math.random() < surface then
+    if math.random() < surface_prob(pos, depth, slope_squared) then
         -- Surface node
-        if math.random() < path_prob(pos, slope_squared, 1) then
-            return c_dirt
+        local prob_of_path = path_prob(pos, slope_squared, 1)
+        if math.random() < prob_of_path then
+            -- If near the edge of path, use the whole nodes, not slabs
+            if prob_of_path < 1 then
+                return c_path_nodes_list[#c_path_nodes_list]
+            else
+                local level = math.ceil(2 * (0.5 + depth))
+                return c_path_nodes_list[level], 0
+            end
         else
             local probs = {
-                [c_dirt_with_grass] = grass_prob(pos, slope_squared),
+                [{c_dirt_with_grass, 0}] = grass_prob(pos, slope_squared),
             }
-            return sample_probabilites(probs)
+            return unpack(sample_probabilites(probs))
         end
-    else
+    elseif math.random() < on_surface_prob(pos, depth, slope_squared) then
         local probs = {
-            [c_dirt] = dirt_prob(pos, depth, slope_squared),
-            [c_stone] = stone_prob(pos, depth, slope_squared)
+            ["grass_blade"] = grass_prob(pos, slope_squared) * (1 - path_prob(pos, slope_squared, 1)),
+            ["air"] = 1,
         }
-        return sample_probabilites(probs)
+        local chosen = sample_probabilites(probs)
+        if chosen == "grass_blade" then
+            return c_grass_blade_list[math.random(#c_grass_blade_list)], math.random(1,4) + 8 + (math.random() < 0.5 and 16 or 0) + 32
+        elseif chosen == "air" then
+            return c_air, 0
+        end
+    elseif math.random() < underground_prob(pos, depth, slope_squared) then
+        local probs = {
+            [{c_dirt, 0}] = dirt_prob(pos, depth, slope_squared),
+            [{c_stone, 0}] = stone_prob(pos, depth, slope_squared)
+        }
+        return unpack(sample_probabilites(probs))
     end
-    return c_air -- Just in case as default
+    return c_air, 0 -- Return air as default
 end
 
 -- Now for the actual generation
@@ -228,6 +267,8 @@ minetest.register_on_generated(function(vmanip, minp, maxp, blockseed)
     local noisemap1 = noise1:get_2d_map_flat({x = minp.x, y = minp.z})
 
     local data = vmanip:get_data()
+    local param2data = vmanip:get_param2_data()
+
     local emin, emax = vmanip:get_emerged_area()
     local area = VoxelArea(emin, emax)
     local noise2d_idx = 0
@@ -260,10 +301,12 @@ minetest.register_on_generated(function(vmanip, minp, maxp, blockseed)
                 local idx = area:indexp(pos)
                 local depth = final_height - y
 
-                data[idx] = sample_node_probabilities(pos, depth, slope_squared, blockseed)
+                data[idx], param2data[idx] = sample_node_probabilities(pos, depth, slope_squared, blockseed)
             end
         end
         noise2d_idx = noise2d_idx + zstride
     end
     vmanip:set_data(data)
+    vmanip:set_param2_data(param2data)
+    vmanip:calc_lighting()
 end)
