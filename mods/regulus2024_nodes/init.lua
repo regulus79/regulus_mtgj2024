@@ -19,3 +19,8 @@ minetest.register_node("regulus2024_nodes:dirt_with_grass1", {
         "regulus2024_dirt1.png^regulus2024_grass1_sideoverlay.png",
     },
 })
+
+minetest.register_node("regulus2024_nodes:wood1", {
+    description = "Test wood",
+    tiles = {"regulus2024_wood1.png"},
+})

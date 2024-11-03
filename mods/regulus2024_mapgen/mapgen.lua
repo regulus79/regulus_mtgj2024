@@ -6,11 +6,13 @@ local flats = {
 }
 
 local paths = {
-    {start = vector.new(0,0,0), dst = vector.new(300,0,0), width = 5},
-    {start = vector.new(0,0,0), dst = vector.new(0,20,500), width = 5},
-    {start = vector.new(300,0,0), dst = vector.new(0,20,500), width = 2},
+    {start = vector.new(0,0,0), dst = vector.new(300,0,0), width = 5, randomness = 1},
+    {start = vector.new(0,0,0), dst = vector.new(0,20,500), width = 5, randomness = 1},
+    {start = vector.new(300,0,0), dst = vector.new(0,20,500), width = 2, randomness = 1},
     --{start = vector.new(0,0,0), dst = vector.new(-500,20,500), width = 5}
 }
+
+local path_endpoint_interp_length = 20
 
 
 local c_stone, c_air, c_dirt
@@ -77,6 +79,36 @@ local map_height = function(noisemap, noise2d_idx, x, z)
     end
 end
 
+local dist_to_path = function(pos, path)
+    local path_start = path.start
+    local path_end = path.dst
+    path_start.y = 0
+    local path_length = (path_end - path_start):length()
+    local path_dir = (path_end - path_start) / path_length
+    local along_path = ((pos - path_start)/path_length):dot(path_dir)
+    if along_path <= 0 then
+        return pos:distance(path_start)
+    elseif along_path >= 1 then
+        return pos:distance(path_end)
+    else
+        local path_normal = path_dir:cross(vector.new(0, 1, 0))
+        -- Add some randomness to the path to make it wavy
+        -- Using path start/end pos as a seed ot make paths unique
+        local seed = (path_start.x - path_end.x)*10 + (path_start.y - path_end.y)*100 + (path_start.z - path_end.z)*1000
+        local random_offset = path_normal * math.sin(along_path * path_length/30 + seed) * 10
+        -- If near the end/start of the path, make randomness less
+        if along_path * path_length < path_endpoint_interp_length then
+            random_offset = random_offset * (along_path * path_length) / path_endpoint_interp_length
+        elseif (1 - along_path) * path_length < path_endpoint_interp_length then
+            random_offset = random_offset * ((1 - along_path) * path_length) / path_endpoint_interp_length
+        end
+        pos = pos + random_offset * path.randomness
+
+        return math.abs(path_normal:dot(pos - path_start))
+    end
+end
+
+
 -- NODE PROBABILITIES
 -- Probability of air
 local air_prob = function(pos, depth, slope_squared)
@@ -101,36 +133,22 @@ end
 local snow_prob = function(pos, slope_squared)
 end
 
-local path_prob = function(pos, slope_squared, randomness)
+local path_prob = function(pos, slope_squared)
     pos.y = 0
-    local dist_to_path = math.huge
+    local min_dist_to_path = math.huge
     local path_width = 0
     for i, v in pairs(paths) do
-        local path_start = v.start
-        local path_end = v.dst
-        path_start.y = 0
-        local path_length = (path_end - path_start):length()
-        local path_dir = (path_end - path_start) / path_length
-        local along_path = ((pos - path_start)/path_length):dot(path_dir)
-        if along_path > 0 and along_path < 1 then
-            local path_normal = path_dir:cross(vector.new(0, 1, 0))
-            -- Add some randomness to the path to make it wavy
-            -- Using path index as a seed ot make paths unique
-            local random_offset = path_normal * math.sin(along_path * path_length/30) * 10
-            pos = pos + random_offset * randomness
-
-            local new_dist_to_path = math.abs(path_normal:dot(pos - path_start))
-            if new_dist_to_path < dist_to_path then
-                dist_to_path = new_dist_to_path
-                path_width = v.width
-            end
+        local new_dist_to_path = dist_to_path(pos, v)
+        if new_dist_to_path < min_dist_to_path then
+            min_dist_to_path = new_dist_to_path
+            path_width = v.width
         end
     end
-    if dist_to_path < path_width then
-        if dist_to_path < path_width / 2 then
+    if min_dist_to_path < path_width then
+        if min_dist_to_path < path_width / 2 then
             return 1
         else
-            return (1 - dist_to_path / path_width) * 2
+            return (1 - min_dist_to_path / path_width) * 2
         end
     else
         return 0
