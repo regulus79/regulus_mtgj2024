@@ -19,7 +19,7 @@ local grass_blade_nodenames = {
     "regulus2024_nodes:grassblade2",
 }
 
-local c_stone, c_air, c_dirt
+local c_stone, c_air, c_dirt, c_dirt_with_grass, c_dirt_with_grass_village
 local c_grass_blade_list = {}
 local c_path_nodes_list = {}
 minetest.register_on_mods_loaded(function()
@@ -27,6 +27,7 @@ minetest.register_on_mods_loaded(function()
     c_dirt = minetest.get_content_id("mapgen_dirt")
     c_air = minetest.get_content_id("air")
     c_dirt_with_grass = minetest.get_content_id("mapgen_dirt_with_grass")
+    c_dirt_with_grass_village = minetest.get_content_id("regulus2024_nodes:dirt_with_grass_village1")
     for _, nodename in pairs(grass_blade_nodenames) do
         table.insert(c_grass_blade_list, minetest.get_content_id(nodename))
     end
@@ -308,5 +309,6 @@ minetest.register_on_generated(function(vmanip, minp, maxp, blockseed)
     end
     vmanip:set_data(data)
     vmanip:set_param2_data(param2data)
+    minetest.generate_decorations(vmanip)
     vmanip:calc_lighting()
 end)

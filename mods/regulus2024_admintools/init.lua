@@ -13,3 +13,21 @@ if minetest.is_creative_enabled() then
         }
     })
 end
+
+minetest.register_craftitem("regulus2024_admintools:screwdriver", {
+    description = "Screwdriver",
+    on_use = function(itemstack, user, pointed_thing)
+        if pointed_thing.under then
+            local node = minetest.get_node(pointed_thing.under)
+            node.param2 = (node.param2 - node.param2 % 4) + (node.param2 % 4 + 1) % 4
+            minetest.set_node(pointed_thing.under, node)
+        end
+    end,
+    on_place = function(itemstack, user, pointed_thing)
+        if pointed_thing.under then
+            local node = minetest.get_node(pointed_thing.under)
+            node.param2 = (node.param2 + 4) % (4*6)
+            minetest.set_node(pointed_thing.under, node)
+        end
+    end
+})
