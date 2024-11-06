@@ -29,8 +29,8 @@ regulus2024_dialogue.show_current_dialogue_formspec = function(player)
     end
 end
 
-
-regulus2024_dialogue.start_dialogue = function(npc, player, dialogue_id)
+---- AAAAA ADD NPC BACK IN
+regulus2024_dialogue.start_dialogue = function(player, dialogue_id)
     -- TODOOOOO
     local dialogue_line_number = 1
     regulus2024_dialogue.set_current_dialogue(player, dialogue_id, dialogue_line_number, nil)
@@ -61,6 +61,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             end
         else
             regulus2024_dialogue.set_current_dialogue(player, nil)
+            -- Send callback to quests
+            regulus2024_quests.on_finish_dialogue(player, dialogue_id)
         end
     end
 end)
@@ -127,6 +129,6 @@ minetest.register_chatcommand("show_dialogue", {
     description = "show a dialogue",
     func = function(name, param)
         local player = minetest.get_player_by_name(name)
-        regulus2024_dialogue.start_dialogue(nil, player, param)
+        regulus2024_dialogue.start_dialogue(player, param)
     end
 })

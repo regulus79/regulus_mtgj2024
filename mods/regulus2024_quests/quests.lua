@@ -3,7 +3,7 @@ regulus2024_quests.quests = {
     quest1 = {
         type = "dig_node",
         what = "regulus2024_nodes:dirt1",
-        on_start_quest = function(player)
+        on_start_quest = function(player, questdata)
         end,
         on_dignode = function(pos, oldnode, digger, questdata)
             minetest.debug("YOU DID IT QUEST1") 
@@ -12,22 +12,26 @@ regulus2024_quests.quests = {
         end
     },
     quest2 = {
-        type = "dig_node",
-        what = "regulus2024_nodes:dirt_with_grass1",
-        on_start_quest = function(player)
+        type = "custom",
+        on_start_quest = function(player, questdata)
         end,
         on_dignode = function(pos, oldnode, digger, questdata)
-            minetest.debug("YOU DID IT QUEST2") 
-            regulus2024_quests.add_active_quest(player, "quest3")
+            if oldnode.name == "regulus2024_nodes:dirt_with_grass1" then
+                regulus2024_quests.complete_quest(player, "quest2")
+                minetest.debug("YOU DID IT QUEST2") 
+                regulus2024_quests.add_active_quest(player, "quest3")
+            end
         end
     },
     quest3 = {
         type = "talk_to_npc",
-        who = "regulus2024_npcs:testnpc",
+        --who = "regulus2024_npcs:testnpc",
+        dialogue_id = "dialogue1",
         on_start_quest = function(player)
         end,
-        on_finish_dialogue = function(player, npc, questdata)
+        on_finish_dialogue = function(player, dialogue_id, questdata)
             minetest.debug("YOU DID IT QUEST3")
+            regulus2024_quests.complete_quest(player, "quest3")
         end
     },
 }

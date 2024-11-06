@@ -23,10 +23,13 @@ local register_npc = function(name, def)
             use_texture_alpha = def.collide_with_objects or true,
             --- PLEAE ADD MORE
         },
-        on_rightclick = function(self, clicker)
-            minetest.debug("I was clicked!")
-        end
+        on_rightclick = def.on_rightclick
     })
 end
 
-register_npc("regulus2024_npcs:testnpc", {visual = "cube"})
+register_npc("regulus2024_npcs:testnpc", {
+    visual = "cube",
+    on_rightclick = function(self, clicker)
+        regulus2024_dialogue.start_dialogue(clicker, "dialogue1")
+    end
+})
