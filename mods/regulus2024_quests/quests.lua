@@ -5,10 +5,9 @@ regulus2024_quests.quests = {
         what = "regulus2024_nodes:dirt1",
         on_start_quest = function(player, questdata)
         end,
-        on_dignode = function(pos, oldnode, digger, questdata)
-            minetest.debug("YOU DID IT QUEST1") 
-            regulus2024_quests.complete_quest(clicker, "quest1")
+        on_complete = function(player, questdata)
             regulus2024_quests.add_active_quest(player, "quest2")
+            minetest.debug("YOU DID IT QUEST1")
         end
     },
     quest2 = {
@@ -17,9 +16,9 @@ regulus2024_quests.quests = {
         end,
         on_dignode = function(pos, oldnode, digger, questdata)
             if oldnode.name == "regulus2024_nodes:dirt_with_grass1" then
-                regulus2024_quests.complete_quest(player, "quest2")
-                minetest.debug("YOU DID IT QUEST2") 
-                regulus2024_quests.add_active_quest(player, "quest3")
+                regulus2024_quests.complete_quest(digger, "quest2")
+                minetest.debug("YOU DID IT QUEST2")
+                regulus2024_quests.add_active_quest(digger, "quest3")
             end
         end
     },

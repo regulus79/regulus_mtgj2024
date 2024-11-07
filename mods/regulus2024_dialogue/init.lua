@@ -113,8 +113,9 @@ regulus2024_dialogue.construct_dialogue_formspec = function(player, dialogue_lin
 
     local formspec = table.concat({
         "formspec_version[7]",
-        "size[12,4]",
+        "size[15,5]",
         "position[0.5,0.75]",
+        "style_type[label;font_size=20]",
         "background9[0,0;0,0;regulus2024_dialogue_background1.png;true;16]",
         text_formspec,
         unpack(responses_formspec_table),
