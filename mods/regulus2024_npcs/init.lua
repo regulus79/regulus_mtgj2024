@@ -1,3 +1,5 @@
+regulus2024_npcs = {}
+
 
 minetest.register_chatcommand("spawn_npc", {
     description = "spawn npc",
@@ -37,7 +39,7 @@ local get_leg_back_and_forth = function(t)
 end
 
 
-local register_npc = function(name, def)
+regulus2024_npcs.register_npc = function(name, def)
     minetest.register_entity(name, {
         initial_properties = {
             visual = def.visual or "mesh",
@@ -56,18 +58,18 @@ local register_npc = function(name, def)
         },
         _state = "idle",
         _look_target = vector.new(0, 0, 1),
-        _average_time_per_look_update = 1,
-        _lose_notice_dist = 8,
-        _gain_notice_dist = 4,
+        _average_time_per_look_update = def._average_time_per_look_update or 1,
+        _lose_notice_dist = def._lose_notice_dist or 8,
+        _gain_notice_dist = def._gain_notice_dist or 4,
         _walk_target = nil,
         _target_velocity = nil,
-        _average_time_per_walk_target_update = 5,
-        _walk_speed = 2,
+        _average_time_per_walk_target_update = def._average_time_per_walk_target_update or 5,
+        _walk_speed = def._walk_speed or 2,
         _min_speed = 0.5,
-        _max_speed = 3,
+        _max_speed = def._max_speed or 3,
         _walk_cycle_position = 0,
-        _stride_length = 1,
-        _leg_length = 0.6985,
+        _stride_length = def._stride_length or 1,
+        _leg_length = def._leg_length or 0.6985,
         on_step = def.on_step or function(self, dtime)
 
             -- LOOK DIRECTION
@@ -94,7 +96,7 @@ local register_npc = function(name, def)
 
             -- WALKING
 
-            if self._state == "idle" then
+            if self._state == "idle_walk" then
                 if math.random() < dtime / self._average_time_per_walk_target_update then
                     self._walk_target = self.object:get_pos() + vector.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5) * 10
                 end
@@ -164,17 +166,29 @@ local register_npc = function(name, def)
     })
 end
 
-register_npc("regulus2024_npcs:testnpc", {
-    extra_on_rightclick = function(self, clicker)
-        regulus2024_dialogue.start_dialogue(clicker, "dni1")
-    end
-})
+
+regulus2024_npcs.register_spawner = function(npc, def)
+    minetest.register_node(npc .. "_spawner", {
+        description = "Spawner for " .. npc,
+        tiles = minetest.is_creative_enabled() and def.tiles or nil,
+        pointable = minetest.is_creative_enabled(),
+        walkable = false,
+        groups = {unbreakable = 1},
+    })
+    minetest.register_abm({
+        label = "Run spawner for " .. npc,
+        nodenames = {npc .. "_spawner"},
+        interval = 3,
+        chance = 1,
+        action = function(pos)
+            local meta = minetest.get_meta(pos)
+            if meta:get_int("triggered") == 0 then
+                minetest.add_entity(pos - vector.new(0, 0.5, 0), npc)
+                meta:set_int("triggered", 1)
+            end
+        end
+    })
+end
 
 
---[[
-For the on-step
-every random length of time, update look target
-every random length of time, update movement target (pathfinding or nay)?
-- How about pick a target position/player based on feeling?
-
-]]
+dofile(minetest.get_modpath("regulus2024_npcs") .. "/npcs.lua")
