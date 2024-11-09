@@ -41,7 +41,7 @@ minetest.register_node("regulus2024_nodes:dirt_with_grass_village1", {
         "regulus2024_dirt1.png",
         "regulus2024_dirt1.png^regulus2024_grass1_sideoverlay.png",
     },
-    groups = {shovelable = 1, unbreakable = 1},
+    groups = {unbreakable = 1},
 })
 
 for i = 1,3 do

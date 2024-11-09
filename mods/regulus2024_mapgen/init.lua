@@ -1,4 +1,4 @@
--- these are unused we can delete them
+-- these are unused we can delete them NO WAIT GOTTA REMOVE EM FROM MAPGEN.LUA
 minetest.register_alias("mapgen_stone", "regulus2024_nodes:stone1")
 minetest.register_alias("mapgen_dirt", "regulus2024_nodes:dirt1")
 minetest.register_alias("mapgen_dirt_with_grass", "regulus2024_nodes:dirt_with_grass1")
@@ -45,7 +45,7 @@ for i=1,4 do
         name = "regulus2024_mapgen:flowers"..i,
         deco_type = "simple",
         decoration = "regulus2024_nodes:flowers"..i,
-        place_on = {"regulus2024_nodes:dirt_with_grass1"},
+        place_on = {"regulus2024_nodes:dirt_with_grass1"}, -- TODO, should it spawn in villages too?
         sidelen = 8,
         noise_params = {
             offset = -8,

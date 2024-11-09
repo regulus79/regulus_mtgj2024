@@ -1,8 +1,27 @@
 
+-- Village positions and buildings
 local flats = {
-    {pos = vector.new(0,0.4,0), size = 50, buffer = 50},
+    {
+        pos = vector.new(0,0.4,0),
+        size = 50,
+        buffer = 50,
+        buildings = {
+            {
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/LogHouse1v1.mts",
+                rotation = "0",
+                offset = vector.new(-15,0,-10),
+                rough_size = 20,
+            },
+            {
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/TownHallv2.mts",
+                rotation = "0",
+                offset = vector.new(15,0,-20),
+                rough_size = 25,
+            }
+        }
+    },
     {pos = vector.new(300,0.4,0), size = 20, buffer = 20},
-    {pos = vector.new(0,20.4,500), size = 50, buffer = 50},
+    {pos = vector.new(0,0.4,500), size = 30, buffer = 50},
 }
 
 local paths = {
@@ -56,17 +75,7 @@ local cubic_interpolation = function(a, b, t)
     end
 end
 
-local map_height = function(noisemap, noise2d_idx, x, z)
-    local noiseheight = noisemap[noise2d_idx]
-    local sqr_distance_from_center = x*x + z*z
-    -- Add mountains around the border of the map
-    local outer_mountain_height = 0
-    if sqr_distance_from_center > 1000*1000 then
-        outer_mountain_height = (sqr_distance_from_center - 1000*1000) ^ 3 / 1000^6 * (noiseheight + 100) * 10 -- Multiplying by a positive version of the noiseheight to get more interesting mountains; better than just adding it.
-    end
-
-    local default_map_height = noiseheight + outer_mountain_height
-    -- Interpolate to flat plain if nearby
+local dist_and_height_and_buffer_of_nearest_flat = function(x, z)
     local flat_height = -math.huge
     local dist_to_flat = math.huge
     local flat_buffer = math.huge
@@ -79,13 +88,28 @@ local map_height = function(noisemap, noise2d_idx, x, z)
             flat_buffer = flatdef.buffer
         end
     end
+    return dist_to_flat, flat_height, flat_buffer
+end
+
+local map_height = function(noisemap, noise2d_idx, x, z)
+    local noiseheight = noisemap[noise2d_idx]
+    local sqr_distance_from_center = x*x + z*z
+    -- Add mountains around the border of the map
+    local outer_mountain_height = 0
+    if sqr_distance_from_center > 1000*1000 then
+        outer_mountain_height = (sqr_distance_from_center - 1000*1000) ^ 3 / 1000^6 * (noiseheight + 100) * 10 -- Multiplying by a positive version of the noiseheight to get more interesting mountains; better than just adding it.
+    end
+
+    local default_map_height = noiseheight + outer_mountain_height
+    -- Interpolate to flat plain if nearby
+    local dist_to_flat, flat_height, flat_buffer = dist_and_height_and_buffer_of_nearest_flat(x, z)
     if dist_to_flat < flat_buffer then
         if dist_to_flat > 0 then
             -- Interpolate based on distance
             local t = dist_to_flat / flat_buffer
             return cubic_interpolation(flat_height, default_map_height, t)
         else
-            return flat_height
+            return flat_height, true -- Trying to save compution by telling the mapgen that we are on a village flat, so place the village grass
         end
     else
         return default_map_height
@@ -121,6 +145,21 @@ local dist_to_path = function(pos, path)
     end
 end
 
+-- Spawning villages
+local spawn_buildings = function(vmanip, emin, emax)
+    for _, village in pairs(flats) do
+        if village.buildings then
+            for _, building in pairs(village.buildings) do
+                local building_min = village.pos + building.offset
+                local building_max = building_min + vector.new(building.rough_size, building.rough_size, building.rough_size)
+                if vector.in_area(emin, building_min, building_max) or vector.in_area(emax, building_min, building_max) or vector.in_area(building_min, emin, emax) or vector.in_area(building_max, emin, emax) then
+                    print(emin,emax,minetest.place_schematic_on_vmanip(vmanip, building_min, building.schem, building.rotation))
+                end
+            end
+        end
+    end
+end
+
 
 -- NODE PROBABILITIES
 -- Probability of being a surface node
@@ -132,8 +171,11 @@ local surface_prob = function(pos, depth, slope_squared)
     end
 end
 -- Surface nodes
-local grass_prob = function(pos, slope_squared)
-    return 1
+local grass_prob = function(pos, slope_squared, is_flat)
+    return is_flat and 0 or 1
+end
+local village_grass_prob = function(pos, slope_squared, is_flat)
+    return is_flat and 1 or 0
 end
 local snow_prob = function(pos, slope_squared)
 end
@@ -212,7 +254,7 @@ local sample_probabilites = function(probs)
 end
 
 -- Return node and its param2 value based on all probabilites
-local sample_node_probabilities = function(pos, depth, slope_squared, seed)
+local sample_node_probabilities = function(pos, depth, slope_squared, seed, is_flat)
     math.randomseed(seed + pos.x + pos.y*1000 + pos.z*1000000)
 
     if math.random() < surface_prob(pos, depth, slope_squared) then
@@ -228,7 +270,8 @@ local sample_node_probabilities = function(pos, depth, slope_squared, seed)
             end
         else
             local probs = {
-                [{c_dirt_with_grass, 0}] = grass_prob(pos, slope_squared),
+                [{c_dirt_with_grass, 0}] = grass_prob(pos, slope_squared, is_flat),
+                [{c_dirt_with_grass_village, 0}] = village_grass_prob(pos, slope_squared, is_flat),
             }
             return unpack(sample_probabilites(probs))
         end
@@ -280,7 +323,7 @@ minetest.register_on_generated(function(vmanip, minp, maxp, blockseed)
         for x = minp.x, maxp.x do
         
             local final_noise2d_idx = noise2d_idx + x-minp.x + 1
-            local height = map_height(noisemap1, final_noise2d_idx, x, z)
+            local height, is_flat = map_height(noisemap1, final_noise2d_idx, x, z)
             local xslope
             --print(final_noise2d_idx, (maxp.x - minp.x + 1), (final_noise2d_idx + 1) % (maxp.x - minp.x + 1), final_noise2d_idx % (maxp.x - minp.x + 1))
             if (final_noise2d_idx + 1 - 1) % (maxp.x - minp.x + 1) + 1 > (final_noise2d_idx - 1) % (maxp.x - minp.x + 1) + 1 then
@@ -302,13 +345,14 @@ minetest.register_on_generated(function(vmanip, minp, maxp, blockseed)
                 local idx = area:indexp(pos)
                 local depth = final_height - y
 
-                data[idx], param2data[idx] = sample_node_probabilities(pos, depth, slope_squared, blockseed)
+                data[idx], param2data[idx] = sample_node_probabilities(pos, depth, slope_squared, blockseed, is_flat)
             end
         end
         noise2d_idx = noise2d_idx + zstride
     end
     vmanip:set_data(data)
     vmanip:set_param2_data(param2data)
+    spawn_buildings(vmanip, emin, emax)
     minetest.generate_decorations(vmanip)
     vmanip:calc_lighting()
 end)
