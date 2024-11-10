@@ -132,7 +132,7 @@ regulus2024_npcs.register_npc = function(name, def)
             -- LOOK DIRECTION
 
             if self._state == "idle" then
-                if type(self._look_target) == "userdata" and self._look_target:get_pos():distance(self.object:get_pos()) > self._lose_notice_dist then
+                if type(self._look_target) == "userdata" and self._look_target:get_pos() and self._look_target:get_pos():distance(self.object:get_pos()) > self._lose_notice_dist then
                     self._look_target = nil
                 end
                 for _, player in pairs(minetest.get_connected_players()) do
