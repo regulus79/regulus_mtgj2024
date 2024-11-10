@@ -1,3 +1,4 @@
+
 -- these are unused we can delete them NO WAIT GOTTA REMOVE EM FROM MAPGEN.LUA
 minetest.register_alias("mapgen_stone", "regulus2024_nodes:stone1")
 minetest.register_alias("mapgen_dirt", "regulus2024_nodes:dirt1")
@@ -13,11 +14,7 @@ minetest.register_alias("mapgen_apple", "regulus2024_nodes:stone1")
 
 minetest.register_mapgen_script(minetest.get_modpath("regulus2024_mapgen") .. "/mapgen.lua")
 
---[[
-minetest.register_on_generated(function(minp, maxp, blockseed)
 
-end)
-]]
 for i=1,2 do
     minetest.register_decoration({
         name = "regulus2024_mapgen:tree2_"..i,
