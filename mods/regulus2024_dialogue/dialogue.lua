@@ -14,6 +14,33 @@ regulus2024_dialogue.dialogue = {
             end
         }
     },
+    hello = {
+        {
+            text = "Oh hey there, stranger! What are you doing in these parts?",
+            responses = {
+                lost = "I'm lost"
+            }
+        },
+        {
+            text = {
+                lost = "Oh, you're lost? No worries here, this is a good part of the country. You'll be fine."
+            },
+            responses = {continue = "Next"}
+        },
+        {
+            text = "Say, do you wanna stay here for a couple nights while you get to your business?",
+            responses = {
+                yes = "Yes",
+                no = "No",
+            }
+        },
+        {
+            text = {
+                yes = "Splendid! You should go talk to Mike, he can show you around.",
+                no = "No? Come on, you really should. Go talk to Mike, he can show you something cool."
+            }
+        }
+    },
     dialogue1 = {
         {
             text = "Hey how are you doing?",

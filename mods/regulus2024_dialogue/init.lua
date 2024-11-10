@@ -101,13 +101,22 @@ regulus2024_dialogue.construct_dialogue_formspec = function(player, dialogue_lin
     local responses_formspec_table = {}
     local i = 0
     for responseid, responsetext in pairs(responses) do
-        table.insert(responses_formspec_table, table.concat({
-            "image_button[8,", i*0.75 + 1,
-            ";3,0.5;regulus2024_dialogue_button6x1.png;",
-            responseid, ";",
-            minetest.colorize("#000000", responsetext), "]"
-        }, ""))
-        i = i + 1
+        -- Ugh todo, was hoping for a different kind of next button but whatever
+        if responseid == "continue" then
+            table.insert(responses_formspec_table, table.concat({
+                "image_button[11,1.5;3,0.5;regulus2024_dialogue_button6x1.png;",
+                responseid, ";",
+                minetest.colorize("#000000", responsetext), "]"
+            }, ""))
+        else
+            table.insert(responses_formspec_table, table.concat({
+                "image_button[11,", i*0.75 + 1.5,
+                ";3,0.5;regulus2024_dialogue_button6x1.png;",
+                responseid, ";",
+                minetest.colorize("#000000", responsetext), "]"
+            }, ""))
+            i = i + 1
+        end
     end
     print(dump(responses_formspec_table))
 

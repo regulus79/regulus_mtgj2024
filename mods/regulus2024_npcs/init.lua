@@ -45,7 +45,7 @@ regulus2024_npcs.register_npc = function(name, def)
             visual = def.visual or "mesh",
             mesh = def.mesh or "regulus2024_player2.glb",
             physical = def.physical or true,
-            collide_with_objects = def.collide_with_objects or true,
+            collide_with_objects = def.collide_with_objects or false,
             collisionbox = def.collisionbox or {-0.3, 0, -0.3, 0.3, 1.8, 0.3},
             selectionbox = def.selectionbox or {-0.3, 0, -0.3, 0.3, 1.8, 0.3},
             pointable = def.pointable or true,
@@ -58,9 +58,11 @@ regulus2024_npcs.register_npc = function(name, def)
         },
         _state = "idle",
         _look_target = vector.new(0, 0, 1),
-        _average_time_per_look_update = def._average_time_per_look_update or 1,
+        _average_time_per_look_update = def._average_time_per_look_update or 0.5,
         _lose_notice_dist = def._lose_notice_dist or 8,
         _gain_notice_dist = def._gain_notice_dist or 4,
+        _general_walk_target = nil,
+        _pace_around_walk_target = def._pace_around_walk_target or false,
         _walk_target = nil,
         _target_velocity = nil,
         _average_time_per_walk_target_update = def._average_time_per_walk_target_update or 5,
@@ -70,7 +72,62 @@ regulus2024_npcs.register_npc = function(name, def)
         _walk_cycle_position = 0,
         _stride_length = def._stride_length or 1,
         _leg_length = def._leg_length or 0.6985,
+        _awake = def._awake or true,
+        _queued_to_appear = false,
+        _queued_to_disappear = false,
+        _awake_time = def._awake_time or nil,
+
+        on_activate = def.on_activate or function(self, dtime, staticdata)
+            if def.extra_on_activate then
+                def.extra_on_activate(self, dtime, staticdata)
+            end
+        end,
         on_step = def.on_step or function(self, dtime)
+            -- QUEUED TO APPEAR/DISAPPEAR
+            -- check if player is watching
+            local is_player_watching = true
+            for _, player in pairs(minetest.get_connected_players()) do
+                if player:get_look_dir():dot(self.object:get_pos() - player:get_pos()) < 0 then
+                    is_player_watching = false
+                end
+            end
+            if not is_player_watching then
+                if self._queued_to_appear then
+                    local props = self.object:get_properties()
+                    props.is_visible = true
+                    self.object:set_properties(props)
+                    self._queued_to_appear = false
+                elseif self._queued_to_disappear then
+                    local props = self.object:get_properties()
+                    props.is_visible = false
+                    self.object:set_properties(props)
+                    self._queued_to_disappear = false
+                end
+            end
+
+            -- SLEEPING/WAKING
+            if self._awake_time then
+                if self._awake_time.wake_up < self._awake_time.fall_asleep then
+                    if minetest.get_timeofday() > self._awake_time.wake_up and minetest.get_timeofday() < self._awake_time.fall_asleep then
+                        self._awake = true
+                    else
+                        self._awake = false
+                    end
+                else
+                    if minetest.get_timeofday() < self._awake_time.wake_up and minetest.get_timeofday() > self._awake_time.fall_asleep then
+                        self._awake = false
+                    else
+                        self._awake = true
+                    end
+                end
+            end
+            local props = self.object:get_properties()
+            if not props.is_visible and self._awake then
+                self._queued_to_appear = true
+            elseif props.is_visible and not self._awake then
+                self._queued_to_disappear = true
+            end
+
 
             -- LOOK DIRECTION
 
@@ -79,8 +136,9 @@ regulus2024_npcs.register_npc = function(name, def)
                     self._look_target = nil
                 end
                 for _, player in pairs(minetest.get_connected_players()) do
-                    if player:get_pos():distance(self.object:get_pos()) < self._gain_notice_dist then
+                    if player:get_pos():distance(self.object:get_pos()) < self._gain_notice_dist  and self._look_target ~= player then
                         self._look_target = player
+                        self.object:set_yaw(vector.dir_to_rotation(player:get_pos():direction(self.object:get_pos())).y + math.pi)
                     end
                 end
             end
@@ -99,6 +157,10 @@ regulus2024_npcs.register_npc = function(name, def)
             if self._state == "idle_walk" then
                 if math.random() < dtime / self._average_time_per_walk_target_update then
                     self._walk_target = self.object:get_pos() + vector.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5) * 10
+                end
+            elseif self._state == "idle" and self._pace_around_walk_target and self._general_walk_target then
+                if math.random() < dtime / self._average_time_per_walk_target_update then
+                    self._walk_target = self._general_walk_target + vector.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5) * self._pace_around_walk_target
                 end
             end
 
@@ -173,6 +235,7 @@ regulus2024_npcs.register_spawner = function(npc, def)
         tiles = minetest.is_creative_enabled() and def.tiles or nil,
         pointable = minetest.is_creative_enabled(),
         walkable = false,
+        paramtype2 = "facedir",
         groups = {unbreakable = 1},
     })
     minetest.register_abm({
@@ -183,7 +246,9 @@ regulus2024_npcs.register_spawner = function(npc, def)
         action = function(pos)
             local meta = minetest.get_meta(pos)
             if meta:get_int("triggered") == 0 then
-                minetest.add_entity(pos - vector.new(0, 0.5, 0), npc)
+                local obj = minetest.add_entity(pos - vector.new(0, 0.5, 0), npc)
+                local rotation = -minetest.get_node(pos).param2 % 4 * math.pi/2 + math.pi
+                obj:set_rotation(vector.new(0, rotation, 0))
                 meta:set_int("triggered", 1)
             end
         end

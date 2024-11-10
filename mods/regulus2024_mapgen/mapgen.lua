@@ -7,7 +7,7 @@ local flats = {
         buffer = 50,
         buildings = {
             {
-                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/LogHouse1v1.mts",
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/LogHouse1v4.mts",
                 rotation = "0",
                 offset = vector.new(-15,0,-10),
                 rough_size = 20,
@@ -17,7 +17,25 @@ local flats = {
                 rotation = "0",
                 offset = vector.new(15,0,-20),
                 rough_size = 25,
-            }
+            },
+            {
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/VillageHouse2v3.mts",
+                rotation = "0",
+                offset = vector.new(3,0,-13),
+                rough_size = 10,
+            },
+            {
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/VillageHouse1v3.mts",
+                rotation = "0",
+                offset = vector.new(13,0,13),
+                rough_size = 10,
+            },
+            {
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Marketv3.mts",
+                rotation = "0",
+                offset = vector.new(-15,0,-38),
+                rough_size = 10,
+            },
         }
     },
     {pos = vector.new(300,0.4,0), size = 20, buffer = 20},
@@ -29,6 +47,8 @@ local paths = {
     {start = vector.new(0,0,0), dst = vector.new(0,20,500), width = 5, randomness = 1},
     {start = vector.new(300,0,0), dst = vector.new(0,20,500), width = 2, randomness = 1},
     --{start = vector.new(0,0,0), dst = vector.new(-500,20,500), width = 5}
+    -- Paths within village
+    {start = vector.new(0,0,0), dst = vector.new(0,0,-20), width = 5, randomness = 0},
 }
 
 local path_endpoint_interp_length = 20
