@@ -9,7 +9,7 @@ dofile(minetest.get_modpath("regulus2024_quests") .. "/quests.lua")
 ---- AAAAAAAAAAAAAAAAAAAA
 --- HOW DO I DO THIS RIGHT I need to have npc be passed as an arg, but I gotta save it to meta too :sob:
 regulus2024_quests.on_finish_dialogue = function(player, dialogue_id)
-    for questname, questdef in pairs(regulus2024_quests.quests) do
+    for questname, questdef in pairs(regulus2024_quests.get_active_quests(player)) do
         if questdef.type == "custom" then
             local questdata = regulus2024_quests.get_active_quests(player)[questname]
             if questdef.on_finish_dialogue then
@@ -24,7 +24,7 @@ regulus2024_quests.on_finish_dialogue = function(player, dialogue_id)
 end
 
 minetest.register_on_dignode(function(pos, oldnode, digger)
-    for questname, questdef in pairs(regulus2024_quests.quests) do
+    for questname, questdef in pairs(regulus2024_quests.get_active_quests(digger)) do
         if questdef.type == "custom" then
             local questdata = regulus2024_quests.get_active_quests(digger)[questname]
             if questdef.on_dignode then
