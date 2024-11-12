@@ -12,6 +12,7 @@ local grass_blade_nodenames = {
 }
 
 local c_stone, c_air, c_dirt, c_dirt_with_grass, c_dirt_with_grass_village
+local c_waypoint_debug
 local c_grass_blade_list = {}
 local c_path_nodes_list = {}
 minetest.register_on_mods_loaded(function()
@@ -26,6 +27,7 @@ minetest.register_on_mods_loaded(function()
     for i = 1, 2 do
         table.insert(c_path_nodes_list, minetest.get_content_id("regulus2024_nodes:path1_"..i))
     end
+    c_waypoint_debug = minetest.get_content_id("regulus2024_npcs:waypoint_debug")
 end)
 
 -- Input is slope squared because it's faster to calcuate and doesn't really matter
@@ -224,6 +226,24 @@ local sample_node_probabilities = function(pos, depth, slope_squared, seed, is_f
     return c_air, 0 -- Return air as default
 end
 
+-- Helper function to place debug stuff, like waypoint blocks.
+local place_debug_blocks = function(vmanip)
+    local data = vmanip:get_data()
+    local emin, emax = vmanip:get_emerged_area()
+    local area = VoxelArea(emin, emax)
+    for _, village in pairs(flats) do
+        if village.waypoints then
+            for _, waypoint in pairs(village.waypoints) do
+                local waypoint_pos = vector.round(waypoint.pos + village.pos)
+                if vector.in_area(waypoint_pos, emin, emax) then
+                    data[area:indexp(waypoint_pos)] = c_waypoint_debug
+                end
+            end
+        end
+    end
+    vmanip:set_data(data)
+end
+
 -- Now for the actual generation
 
 minetest.register_on_generated(function(vmanip, minp, maxp, blockseed)
@@ -282,5 +302,6 @@ minetest.register_on_generated(function(vmanip, minp, maxp, blockseed)
     vmanip:set_param2_data(param2data)
     spawn_buildings(vmanip, emin, emax)
     minetest.generate_decorations(vmanip)
+    place_debug_blocks(vmanip)
     vmanip:calc_lighting()
 end)

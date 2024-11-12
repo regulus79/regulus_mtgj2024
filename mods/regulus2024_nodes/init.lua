@@ -17,6 +17,7 @@ for i = 1, 2 do
         tiles = {"regulus2024_dirt1.png"},
         groups = {shovelable = 1},
         drawtype = "nodebox",
+        paramtype = "light",
         node_box = {
             type = "fixed",
             fixed = {-0.5, -0.5, -0.5, 0.5, -0.5 + i/2, 0.5}
