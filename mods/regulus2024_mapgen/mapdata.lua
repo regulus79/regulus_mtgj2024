@@ -83,13 +83,13 @@ local flats = {
                 village = 1
             },
             outside_town_hall_door = {
-                pos = vector.new(24,1,-1),
+                pos = vector.new(24.5,1,-1),
                 radius = 0,
                 neighbors = {"in_front_of_town_hall", "inside_town_hall_door"},
                 village = 1
             },
             inside_town_hall_door = {
-                pos = vector.new(24,1,-3),
+                pos = vector.new(24.5,1,-3),
                 radius = 0,
                 neighbors = {"outside_town_hall_door", "inside_town_hall"},
                 village = 1
@@ -103,7 +103,7 @@ local flats = {
             towards_marketplace = {
                 pos = vector.new(0,1,-3),
                 radius = 1,
-                neighbors = {"center_marketplace"},
+                neighbors = {"center_marketplace", "main_intersection"},
                 village = 1
             },
             center_marketplace = {
@@ -118,6 +118,13 @@ local flats = {
                 neighbors = {"center_marketplace"},
                 village = 1
             },
+        },
+        spawners = {
+            -- Note that some spawners are part of the buildings they are in, and are not listed here
+            {name = "regulus2024_npcs:villagenpc1_spawner", pos = vector.new(8, 1, 15)},
+            {name = "regulus2024_npcs:villagenpc1_spawner", pos = vector.new(3, 1, 1)},
+            {name = "regulus2024_npcs:villagenpc1_spawner", pos = vector.new(-4, 1, -28)},
+            {name = "regulus2024_npcs:villagenpc1_spawner", pos = vector.new(25, 1, 7)},
         }
     },
     {pos = vector.new(300,0.4,0), size = 20, buffer = 20},
@@ -138,7 +145,7 @@ lamp_posts_village1 = {
     vector.new(9, 1, 7),
     vector.new(6, 1, 5),
     vector.new(11, 1, -2),
-    vector.new(14, 1, 1),
+    vector.new(14, 1, -2),
     vector.new(19, 1, 10),
     vector.new(25, 1, 12),
     vector.new(30, 1, 6),

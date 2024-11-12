@@ -154,17 +154,6 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
         self.object:set_properties(props)
 
         self._state = "walk_to_waypoint"
-        local possible_destinations = {
-            villages[1].waypoints.main_intersection,
-            villages[1].waypoints.inside_town_hall,
-            villages[1].waypoints.center_marketplace,
-            villages[1].waypoints.inside_main_npc_house,
-        }
-        self._target_waypoint = possible_destinations[math.random(#possible_destinations)]
-        minetest.debug("Picked a new destination:", dump(self._target_waypoint))
-    end,
-    on_reach_target_waypoint = function(self)
-        minetest.debug("We got there!")
         minetest.after(math.random() * 20, function()
             local possible_destinations = {
                 "main_intersection",
@@ -175,13 +164,40 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
             }
             local destination = possible_destinations[math.random(#possible_destinations)]
             self._target_waypoint = villages[1].waypoints[destination]
-            minetest.debug("Picked a new destination:", destination)
+        end)
+    end,
+    on_reach_target_waypoint = function(self)
+        minetest.after(math.random() * 20, function()
+            local possible_destinations = {
+                "main_intersection",
+                "inside_town_hall",
+                "center_marketplace",
+                "center_marketplace2",
+                "inside_main_npc_house",
+            }
+            local destination = possible_destinations[math.random(#possible_destinations)]
+            self._target_waypoint = villages[1].waypoints[destination]
         end)
     end,
     extra_on_rightclick = function(self, clicker)
         self._awake_time = {wake_up = 0.25 + math.random()*0.1 - 0.05, fall_asleep = 0.75 + math.random()*0.1 - 0.05}
         self._look_target = clicker
         regulus2024_dialogue.start_dialogue(clicker, "dni1")
+    end,
+    extra_on_step = function(self, dtime)
+        -- Randomize target waypoint every now and then to stop use from getting stuck forever
+        if math.random() < 1 / 60 * dtime and self.object:get_velocity():length() < 0.1 then
+            minetest.debug("Randomizing pos!")
+            local possible_destinations = {
+                "main_intersection",
+                "inside_town_hall",
+                "center_marketplace",
+                "center_marketplace2",
+                "inside_main_npc_house",
+            }
+            local destination = possible_destinations[math.random(#possible_destinations)]
+            self._target_waypoint = villages[1].waypoints[destination]
+        end
     end
 })
 regulus2024_npcs.register_spawner("regulus2024_npcs:villagenpc1", {})

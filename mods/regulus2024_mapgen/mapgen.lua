@@ -83,11 +83,28 @@ local spawn_buildings = function(vmanip, emin, emax)
                 local building_min = village.pos + building.offset
                 local building_max = building_min + vector.new(building.rough_size, building.rough_size, building.rough_size)
                 if vector.in_area(emin, building_min, building_max) or vector.in_area(emax, building_min, building_max) or vector.in_area(building_min, emin, emax) or vector.in_area(building_max, emin, emax) then
-                    print(emin,emax,minetest.place_schematic_on_vmanip(vmanip, building_min, building.schem, building.rotation))
+                    minetest.place_schematic_on_vmanip(vmanip, building_min, building.schem, building.rotation)
                 end
             end
         end
     end
+end
+
+-- Spawning (some of the) npc spawners
+local spawn_spawners = function(vmanip)
+    local data = vmanip:get_data()
+    local emin, emax = vmanip:get_emerged_area()
+    local area = VoxelArea(emin, emax)
+    for _, village in pairs(flats) do
+        if village.spawners then
+            for _, spawner in pairs(village.spawners) do
+                if vector.in_area(spawner.pos, emin, emax) then
+                    data[area:indexp(spawner.pos)] = minetest.get_content_id(spawner.name)
+                end
+            end
+        end
+    end
+    vmanip:set_data(data)
 end
 
 
@@ -301,6 +318,7 @@ minetest.register_on_generated(function(vmanip, minp, maxp, blockseed)
     vmanip:set_data(data)
     vmanip:set_param2_data(param2data)
     spawn_buildings(vmanip, emin, emax)
+    spawn_spawners(vmanip)
     minetest.generate_decorations(vmanip)
     place_debug_blocks(vmanip)
     vmanip:calc_lighting()

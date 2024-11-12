@@ -244,7 +244,7 @@ regulus2024_npcs.register_npc = function(name, def)
                         if dist_to_walk_target < 1 then
                             -- Arrived, time to pick next pos
                             -- Emit Callback if we made it to the end
-                            if self._next_waypoint.pos == self._target_waypoint.pos then
+                            if self._next_waypoint and self._next_waypoint.pos == self._target_waypoint.pos then
                                 if def.on_reach_target_waypoint then
                                     self._target_waypoint = nil
                                     def.on_reach_target_waypoint(self)
