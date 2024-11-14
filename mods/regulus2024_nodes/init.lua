@@ -45,7 +45,7 @@ minetest.register_node("regulus2024_nodes:dirt_with_grass_village1", {
     groups = {unbreakable = 1},
 })
 
-for i = 1,3 do
+for i = 1,4 do
     minetest.register_node("regulus2024_nodes:wood"..i, {
         description = "Test wood"..i,
         tiles = {"regulus2024_wood"..i..".png"},
@@ -172,11 +172,13 @@ minetest.register_node("regulus2024_nodes:plastercrosstile1", {
     tiles = {"regulus2024_plastercrosstile1.png"},
     groups = {pickaxeable = 1},
 })
-minetest.register_node("regulus2024_nodes:stonebrick1", {
-    description = "Test stone brick",
-    tiles = {"regulus2024_stonebrick1.png"},
-    groups = {pickaxeable = 1},
-})
+for i = 1, 2 do
+    minetest.register_node("regulus2024_nodes:stonebrick" .. i, {
+        description = "Test stone brick" .. i,
+        tiles = {"regulus2024_stonebrick" .. i .. ".png"},
+        groups = {pickaxeable = 1},
+    })
+end
 
 
 dofile(minetest.get_modpath("regulus2024_nodes").."/stairs.lua")

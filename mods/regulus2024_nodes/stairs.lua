@@ -6,6 +6,7 @@ stair_nodes = {
     "regulus2024_nodes:wood1",
     "regulus2024_nodes:wood2",
     "regulus2024_nodes:wood3",
+    "regulus2024_nodes:wood4",
     "regulus2024_nodes:cobble1",
     "regulus2024_nodes:cobble2",
     "regulus2024_nodes:gravel1",
@@ -13,6 +14,7 @@ stair_nodes = {
     "regulus2024_nodes:plastertile1",
     "regulus2024_nodes:plastercrosstile1",
     "regulus2024_nodes:stonebrick1",
+    "regulus2024_nodes:stonebrick2",
     "regulus2024_nodes:glass2",
     "regulus2024_nodes:lantern1",
 }

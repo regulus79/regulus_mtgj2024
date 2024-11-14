@@ -1,5 +1,33 @@
 
 regulus2024_dialogue.dialogue = {
+
+    its_dangerous_outside_come_in = {
+        {
+            text = "What are you doing out here this late at night? It's dangerous out here, you should come inside."
+        }
+    },
+    I_must_get_to_my_studies = {
+        {
+            text = "I must get to my studies"
+        }
+    },
+
+    talking_to_villagers = {
+        {
+            text = function(player)
+                local num_villagers_encountered = regulus2024_quests.get_active_quests(player)["talk_to_villagers"].num_villagers_encountered
+                local lines = {
+                    "Hi1",
+                    "Hi2",
+                    "Hi3",
+                    "Hi4",
+                }
+                return lines[num_villagers_encountered + 1]
+            end
+        }
+    },
+
+
     dni1 = {
         {
             text = function()
@@ -14,6 +42,8 @@ regulus2024_dialogue.dialogue = {
             end
         }
     },
+
+    -- Test dialogue
     hello = {
         {
             text = "Oh hey there, stranger! What are you doing in these parts?",

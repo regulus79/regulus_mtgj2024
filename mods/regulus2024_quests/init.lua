@@ -9,34 +9,52 @@ dofile(minetest.get_modpath("regulus2024_quests") .. "/quests.lua")
 ---- AAAAAAAAAAAAAAAAAAAA
 --- HOW DO I DO THIS RIGHT I need to have npc be passed as an arg, but I gotta save it to meta too :sob:
 regulus2024_quests.on_finish_dialogue = function(player, dialogue_id)
-    for questname, questdef in pairs(regulus2024_quests.get_active_quests(player)) do
+    for questname, questdata in pairs(regulus2024_quests.get_active_quests(player)) do
+        local questdef = regulus2024_quests.quests[questname]
+        minetest.debug("On finish dialogue with", dialogue_id, questdef.type, questdef.type == "complete_dialogue", questdef.dialogue_id, questdef.dialogue_id == dialogue_id)
         if questdef.type == "custom" then
             local questdata = regulus2024_quests.get_active_quests(player)[questname]
             if questdef.on_finish_dialogue then
                 local new_questdata = questdef.on_finish_dialogue(player, dialogue_id, questdata) or questdata
                 regulus2024_quests.set_active_quest_data(player, questname, new_questdata)
             end
-        elseif questdef.type == "talk_to_npc" and questdef.dialogue_id == dialogue_id and regulus2024_quests.get_active_quests(player)[questname] then
-            local questdata = regulus2024_quests.get_active_quests(player)[questname]
-            questdef.on_finish_dialogue(player, dialogue_id, questdata)
+        elseif questdef.type == "complete_dialogue" and questdef.dialogue_id == dialogue_id then
+            regulus2024_quests.complete_quest(player, questname)
         end
     end
 end
 
 minetest.register_on_dignode(function(pos, oldnode, digger)
-    for questname, questdef in pairs(regulus2024_quests.get_active_quests(digger)) do
+    for questname, questdata in pairs(regulus2024_quests.get_active_quests(digger)) do
+        local questdef = regulus2024_quests.quests[questname]
         if questdef.type == "custom" then
             local questdata = regulus2024_quests.get_active_quests(digger)[questname]
             if questdef.on_dignode then
                 local new_questdata = questdef.on_dignode(pos, oldnode, digger, questdata) or questdata
                 regulus2024_quests.set_active_quest_data(digger, questname, new_questdata)
             end
-        elseif questdef.type == "dig_node" and questdef.what == oldnode.name and regulus2024_quests.get_active_quests(digger)[questname] then
+        elseif questdef.type == "dig_node" and questdef.what == oldnode.name then
             regulus2024_quests.complete_quest(digger, questname)
         end
     end
 end)
 
+minetest.register_globalstep(function()
+    for _, player in pairs(minetest.get_connected_players()) do
+        for questname, questdata in pairs(regulus2024_quests.get_active_quests(player)) do
+            local questdef = regulus2024_quests.quests[questname]
+            if questdef.type == "custom" then
+                local questdata = regulus2024_quests.get_active_quests(player)[questname]
+                if questdef.on_step then
+                    local new_questdata = questdef.on_step(player, questdata) or questdata
+                    regulus2024_quests.set_active_quest_data(player, questname, new_questdata)
+                end
+            elseif questdef.type == "go_to_pos" and player:get_pos():distance(questdef.pos) <= questdef.radius then
+                regulus2024_quests.complete_quest(player, questname)
+            end
+        end
+    end
+end)
 
 
 --
@@ -96,7 +114,8 @@ end
 regulus2024_quests.complete_quest = function(player, questname)
     if regulus2024_quests.quests[questname].on_complete then
         local questdata = regulus2024_quests.get_active_quests(player)[questname]
-        regulus2024_quests.quests[questname].on_complete(player, questdata)
+        local new_questdata = regulus2024_quests.quests[questname].on_complete(player, questdata)
+        regulus2024_quests.set_active_quest_data(player, questname, new_questdata)
     end
     regulus2024_quests.remove_active_quest(player, questname)
     regulus2024_quests.add_completed_quest(player, questname)

@@ -15,6 +15,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:testnpc", {
 regulus2024_npcs.register_spawner("regulus2024_npcs:testnpc", {})
 
 -- Main npc
+-- NVM this guy is not the main npc anymore
 
 regulus2024_npcs.register_npc("regulus2024_npcs:mainnpc", {
     _average_time_per_look_update = 3,
@@ -25,7 +26,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:mainnpc", {
     end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
-        regulus2024_dialogue.start_dialogue(clicker, "hello")
+        regulus2024_dialogue.start_dialogue(clicker, "dni1")
     end
 })
 regulus2024_npcs.register_spawner("regulus2024_npcs:mainnpc", {})
@@ -182,7 +183,11 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
     extra_on_rightclick = function(self, clicker)
         self._awake_time = {wake_up = 0.25 + math.random()*0.1 - 0.05, fall_asleep = 0.75 + math.random()*0.1 - 0.05}
         self._look_target = clicker
-        regulus2024_dialogue.start_dialogue(clicker, "dni1")
+        if regulus2024_quests.get_active_quests(clicker)["talk_to_villagers"] then
+            regulus2024_dialogue.start_dialogue(clicker, "talking_to_villagers")
+        else
+            regulus2024_dialogue.start_dialogue(clicker, "dni1")
+        end
     end,
     extra_on_step = function(self, dtime)
         -- Randomize target waypoint every now and then to stop use from getting stuck forever
@@ -201,3 +206,26 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
     end
 })
 regulus2024_npcs.register_spawner("regulus2024_npcs:villagenpc1", {})
+
+
+
+-- OKAY now for the real deal
+
+regulus2024_npcs.register_npc("regulus2024_npcs:oldman", {
+    _average_time_per_look_update = 3,
+    _gain_notice_dist = 8,
+    _lose_notice_dist = 12,
+    extra_on_activate = function(self)
+        self._general_walk_target = self.object:get_pos()
+    end,
+    extra_on_rightclick = function(self, clicker)
+        self._look_target = clicker
+        if regulus2024_quests.get_active_quests(clicker)["start_talk_to_old_man"] then
+            regulus2024_dialogue.start_dialogue(clicker, "its_dangerous_outside_come_in")
+        end
+        if regulus2024_quests.get_active_quests(clicker)["talk_to_old_man_again"] then
+            regulus2024_dialogue.start_dialogue(clicker, "I_must_get_to_my_studies")
+        end
+    end
+})
+regulus2024_npcs.register_spawner("regulus2024_npcs:oldman", {})

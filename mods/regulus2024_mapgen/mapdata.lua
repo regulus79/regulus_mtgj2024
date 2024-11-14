@@ -143,7 +143,7 @@ lamp_posts_village1 = {
     vector.new(12, 1, 21),
     vector.new(12, 1, 11),
     vector.new(9, 1, 7),
-    vector.new(6, 1, 5),
+    --vector.new(6, 1, 5),
     vector.new(11, 1, -2),
     vector.new(14, 1, -2),
     vector.new(19, 1, 10),

@@ -145,6 +145,7 @@ regulus2024_npcs.register_npc = function(name, def)
         _eye_height = def._eye_height or 1.625,
         _scale = def._scale or 1, -- not the scale of the model, you have to set that manually SORRY I"M JUST RUSHING RIGHT NOW
         _awake = def._awake or true,
+        _force_disappear = false,
         _queued_to_appear = false,
         _queued_to_disappear = false,
         _awake_time = def._awake_time or nil,
@@ -194,9 +195,9 @@ regulus2024_npcs.register_npc = function(name, def)
                 end
             end
             local props = self.object:get_properties()
-            if not props.is_visible and self._awake then
+            if not props.is_visible and self._awake and not self._force_disappear then
                 self._queued_to_appear = true
-            elseif props.is_visible and not self._awake then
+            elseif props.is_visible and not self._awake  or self._force_disappear then
                 self._queued_to_disappear = true
             end
 
