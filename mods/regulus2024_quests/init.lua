@@ -11,7 +11,6 @@ dofile(minetest.get_modpath("regulus2024_quests") .. "/quests.lua")
 regulus2024_quests.on_finish_dialogue = function(player, dialogue_id)
     for questname, questdata in pairs(regulus2024_quests.get_active_quests(player)) do
         local questdef = regulus2024_quests.quests[questname]
-        minetest.debug("On finish dialogue with", dialogue_id, questdef.type, questdef.type == "complete_dialogue", questdef.dialogue_id, questdef.dialogue_id == dialogue_id)
         if questdef.type == "custom" then
             local questdata = regulus2024_quests.get_active_quests(player)[questname]
             if questdef.on_finish_dialogue then

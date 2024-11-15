@@ -1,5 +1,63 @@
 
 regulus2024_quests.quests = {
+    find_a_place_to_stay = {
+        type = "custom",
+        on_start_quest = function(player, questdata)
+            minetest.debug("You started the talk to villagers quest!")
+            questdata.num_villagers_encountered = 0
+        end,
+        on_finish_dialogue = function(player, dialogue_id, questdata)
+            if dialogue_id == "find_a_place_to_stay1" or dialogue_id == "find_a_place_to_stay2" or dialogue_id == "find_a_place_to_stay3" then
+                questdata.num_villagers_encountered = questdata.num_villagers_encountered + 1
+                minetest.debug("You talked to a villager! So far:", questdata.num_villagers_encountered)
+            end
+            if questdata.num_villagers_encountered == 3 then
+                minetest.debug("You completed the talk to villagers quest")
+                regulus2024_quests.complete_quest(player, "find_a_place_to_stay")
+                regulus2024_quests.add_active_quest(player, "ask_wizard_for_place_to_stay")
+            end
+        end
+    },
+    ask_wizard_for_place_to_stay = {
+        type = "complete_dialogue",
+        dialogue_id = "ask_wizard_for_place_to_stay",
+        on_complete = function(player, questdata)
+            minetest.debug("You compleded the ask wizard for place to stay quest!")
+            -- Find the npc. UGH this is bad but it's the only way I know of, since you can't serialize objects to store in meta, cuz like what if they rejoin?
+            for object in minetest.objects_inside_radius(player:get_pos(), 8) do
+                if not object:is_player() and object:get_luaentity().name == "regulus2024_npcs:oldman" then
+                    minetest.debug("Found the old man, told him to go home")
+                    object:get_luaentity()._target_waypoint = villages[1].waypoints.inside_main_npc_house
+                end
+            end
+            regulus2024_quests.add_active_quest(player, "go_inside_the_house")
+        end
+    },
+    go_inside_the_house = {
+        type = "go_to_pos",
+        pos = vector.new(0,0,0),
+        radius = 5,
+        on_complete = function(player, questdata)
+            minetest.debug("You compleded the go inside house quest!")
+            regulus2024_quests.add_active_quest(player, "talk_to_wizard_again")
+        end
+    },
+    talk_to_wizard_again = {
+        type = "complete_dialogue",
+        dialogue_id = "ask_wizard_for_place_to_stay",
+        on_complete = function(player, questdata)
+            for object in minetest.objects_inside_radius(player:get_pos(), 8) do
+                if not object:is_player() and object:get_luaentity().name == "regulus2024_npcs:oldman" then
+                    minetest.debug("Found the old man, told him to go home")
+                end
+            end
+            regulus2024_quests.complete_quest(player, "talk_to_wizard_again")
+            minetest.debug("You compleded the talk to the old man for a long time quest!")
+        end
+    },
+
+--[[
+-- OLD STUFF NOT USED
     start_talk_to_old_man = {
         type = "complete_dialogue",
         dialogue_id = "its_dangerous_outside_come_in",
@@ -90,5 +148,6 @@ regulus2024_quests.quests = {
             regulus2024_quests.complete_quest(player, "quest3")
         end
     },
+]]
 }
 

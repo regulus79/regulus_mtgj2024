@@ -26,7 +26,11 @@ regulus2024_npcs.register_npc("regulus2024_npcs:mainnpc", {
     end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
-        regulus2024_dialogue.start_dialogue(clicker, "dni1")
+        if regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"] then
+            regulus2024_dialogue.start_dialogue(clicker, "find_a_place_to_stay" .. tostring(regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"].num_villagers_encountered + 1))
+        else
+            regulus2024_dialogue.start_dialogue(clicker, "dni1")
+        end
     end
 })
 regulus2024_npcs.register_spawner("regulus2024_npcs:mainnpc", {})
@@ -43,7 +47,11 @@ regulus2024_npcs.register_npc("regulus2024_npcs:sidenpc1", {
     end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
-        regulus2024_dialogue.start_dialogue(clicker, "dni1")
+        if regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"] then
+            regulus2024_dialogue.start_dialogue(clicker, "find_a_place_to_stay" .. tostring(regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"].num_villagers_encountered + 1))
+        else
+            regulus2024_dialogue.start_dialogue(clicker, "dni1")
+        end
     end
 })
 regulus2024_npcs.register_spawner("regulus2024_npcs:sidenpc1", {})
@@ -58,7 +66,11 @@ regulus2024_npcs.register_npc("regulus2024_npcs:sidenpc2", {
     end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
-        regulus2024_dialogue.start_dialogue(clicker, "dni1")
+        if regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"] then
+            regulus2024_dialogue.start_dialogue(clicker, "find_a_place_to_stay" .. tostring(regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"].num_villagers_encountered + 1))
+        else
+            regulus2024_dialogue.start_dialogue(clicker, "dni1")
+        end
     end
 })
 regulus2024_npcs.register_spawner("regulus2024_npcs:sidenpc2", {})
@@ -161,7 +173,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
                 "inside_town_hall",
                 "center_marketplace",
                 "center_marketplace2",
-                "inside_main_npc_house",
+                "outside_main_npc_house",
             }
             local destination = possible_destinations[math.random(#possible_destinations)]
             self._target_waypoint = villages[1].waypoints[destination]
@@ -174,7 +186,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
                 "inside_town_hall",
                 "center_marketplace",
                 "center_marketplace2",
-                "inside_main_npc_house",
+                "outside_main_npc_house",
             }
             local destination = possible_destinations[math.random(#possible_destinations)]
             self._target_waypoint = villages[1].waypoints[destination]
@@ -198,7 +210,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
                 "inside_town_hall",
                 "center_marketplace",
                 "center_marketplace2",
-                "inside_main_npc_house",
+                "outside_main_npc_house",
             }
             local destination = possible_destinations[math.random(#possible_destinations)]
             self._target_waypoint = villages[1].waypoints[destination]
@@ -220,11 +232,11 @@ regulus2024_npcs.register_npc("regulus2024_npcs:oldman", {
     end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
-        if regulus2024_quests.get_active_quests(clicker)["start_talk_to_old_man"] then
-            regulus2024_dialogue.start_dialogue(clicker, "its_dangerous_outside_come_in")
+        if regulus2024_quests.get_active_quests(clicker)["ask_wizard_for_place_to_stay"] then
+            regulus2024_dialogue.start_dialogue(clicker, "ask_wizard_for_place_to_stay")
         end
-        if regulus2024_quests.get_active_quests(clicker)["talk_to_old_man_again"] then
-            regulus2024_dialogue.start_dialogue(clicker, "I_must_get_to_my_studies")
+        if regulus2024_quests.get_active_quests(clicker)["talk_to_wizard_again"] then
+            regulus2024_dialogue.start_dialogue(clicker, "talk_to_wizard_again")
         end
     end
 })

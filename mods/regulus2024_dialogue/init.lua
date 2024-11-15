@@ -110,8 +110,8 @@ regulus2024_dialogue.construct_dialogue_formspec = function(player, dialogue_lin
             }, ""))
         else
             table.insert(responses_formspec_table, table.concat({
-                "image_button[11,", i*0.75 + 1.5,
-                ";3,0.5;regulus2024_dialogue_button6x1.png;",
+                "image_button[8,", i*0.75 + 1.5,
+                ";6,0.5;regulus2024_dialogue_button6x1.png;",
                 responseid, ";",
                 minetest.colorize("#000000", responsetext), "]"
             }, ""))

@@ -204,17 +204,17 @@ regulus2024_npcs.register_npc = function(name, def)
 
             -- LOOK DIRECTION
 
-            if self._state == "idle" then
-                if type(self._look_target) == "userdata" and self._look_target:get_pos() and self._look_target:get_pos():distance(self.object:get_pos()) > self._lose_notice_dist then
-                    self._look_target = nil
-                end
-                for _, player in pairs(minetest.get_connected_players()) do
-                    if player:get_pos():distance(self.object:get_pos()) < self._gain_notice_dist  and self._look_target ~= player then
-                        self._look_target = player
-                        self.object:set_yaw(vector.dir_to_rotation(player:get_pos():direction(self.object:get_pos())).y + math.pi)
-                    end
+            if type(self._look_target) == "userdata" and self._look_target:get_pos() and self._look_target:get_pos():distance(self.object:get_pos()) > self._lose_notice_dist then
+                self._look_target = nil
+                self._look_target = self.object:get_pos() + vector.new(math.random() * 0.5 - 0.25, math.random() - 0.5, math.random() + 2):rotate(self.object:get_rotation()) * math.random(5,20)
+            end
+            for _, player in pairs(minetest.get_connected_players()) do
+                if player:get_pos():distance(self.object:get_pos()) < self._gain_notice_dist  and self._look_target ~= player then
+                    self._look_target = player
+                    self.object:set_yaw(vector.dir_to_rotation(player:get_pos():direction(self.object:get_pos())).y + math.pi)
                 end
             end
+            
             if type(self._look_target) == "userdata" then
                 update_head_direction(self, self._look_target:get_pos() + vector.new(0,1,0) * self._look_target:get_properties().eye_height - vector.new(0,1,0) * self._eye_height, 8, dtime)
             else
