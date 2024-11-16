@@ -17,7 +17,7 @@ regulus2024_dialogue.dialogue = {
 
     find_a_place_to_stay1 = {
         {
-            text = "Don't talk to me.",
+            text = "What do you want?",
             responses = {stay = "Do you have a place I could stay the night?"}
         },
         {
@@ -30,7 +30,7 @@ regulus2024_dialogue.dialogue = {
     },
     find_a_place_to_stay2 = {
         {
-            text = "I'm busy, leave me alone.",
+            text = "What is it? Be quick, I'm busy right now.",
             responses = {stay = "Do you have a place I could stay the night?"}
         },
         {
@@ -38,20 +38,20 @@ regulus2024_dialogue.dialogue = {
             responses = {monster = "Do you know anything about the monster?"}
         },
         {
-            text = "Why do you ask about it? It killed my father. That wretched beast! \nIf I had the power to kill it, I would. But alas we live under constant fear of it.",
+            text = "Why yes, it killed my father. That wretched beast! \nIf I had the power to kill it, I would. But alas we live under constant fear of it.",
         },
     },
     find_a_place_to_stay3 = {
         {
-            text = "What do you want?",
+            text = "Hello there.",
             responses = {stay = "Do you have a place I could stay the night?"}
         },
         {
-            text = "Stay for the night? Nay, I do not have space. Nor enough food to share. I heard the old wizard down there is quite hospitable, maybe you should try him.",
+            text = "Stay for the night? Nay, I do not have space. Nor enough food to share.\nI heard the old wizard down there is quite hospitable, maybe you should try him.",
             responses = {monster = "Do you know anything about the monster?"}
         },
         {
-            text = "Yes, it's a terrible plague for us. Some nights you can see it flying high overhead. It sends chills down my back.",
+            text = "Yes, it's a terrible ill. Some nights you can see it flying high overhead.\nIt sends chills down my back.",
         },
     },
     ask_wizard_for_place_to_stay = {
@@ -60,7 +60,7 @@ regulus2024_dialogue.dialogue = {
             responses = {stay = "Do you have a place I could stay the night?"}
         },
         {
-            text = "Hm, alright. I see something about you I haven't seen in a long time. Why don't you come in with me, let me get you some supper.",
+            text = "Hmm... I see something about you I haven't seen in a long time.\nWhy don't you come in with me.",
         },
     },
     talk_to_wizard_again = {
@@ -69,7 +69,7 @@ regulus2024_dialogue.dialogue = {
             responses = {monster = "I asked them about the monster"},
         },
         {
-            text = "Ah yes. Everyone in the village has had some encounter with it. For some it killed their family, others their friends.",
+            text = "Ah yes. Everyone in the village has had some encounter with it.\nFor some it killed their family, others their friends.",
             responses = {you_wizard = "Are you the wizard who tried to kill it?"},
         },
         {
@@ -81,15 +81,15 @@ regulus2024_dialogue.dialogue = {
             responses = {next = "next"},
         },
         {
-            text = "I was still being trained at the time. I did not have the skill or the courage to help defend. But he, he bravely fought the monster and drove it back to it's den, far far away.",
+            text = "I was still being trained at the time. I did not have the skill or the courage to help defend. \nBut he, he bravely fought the monster and drove it back to it's den, far far away.",
             responses = {next = "next"},
         },
         {
-            text = "Everyone, including me, was ready to celebrate when he came back victorious having killed the monster. But… he never did. I… I'm sorry, just give me a moment.",
+            text = "Everyone, including me, was ready to celebrate when he came back victorious\nhaving killed the monster. But… he never did.\nI… I'm sorry, just give me a moment.",
             responses = {next = "next"},
         },
         {
-            text = "My training was not finished when he departed. But I spent my time studying his books and scrolls.",
+            text = "My training was not finished when he departed.\nBut I spent my time studying his books and scrolls.",
             responses = {next = "next"},
         },
         {
@@ -97,15 +97,15 @@ regulus2024_dialogue.dialogue = {
             responses = {next = "next"},
         },
         {
-            text = "I used my little knowledge to protect the village. I have spent my strength casting spells to keep this village hidden from the eyes of the monster.",
+            text = "I used my little knowledge to protect the village. I have spent my strength casting\nspells to keep this village hidden from the eyes of the monster.",
             responses = {next = "next"},
         },
         {
-            text = "But alas, I am growing old. It is not natural to live this long, and my strength has been steadily diminishing. I cannot protect the village forever.",
+            text = "But alas, I am growing old. It is not natural to live this long, and my strength has\nbeen steadily diminishing. I cannot protect the village forever.",
             responses = {old = "How old are you?"},
         },
         {
-            text = "Very old, young one. But I'm not immortal. I think that living in this house ... it has done something to me.",
+            text = "Very old, young one. But I'm not immortal.\nI think that living in this house ... it has done something to me.",
             responses = {next = "next"},
         },
         {
@@ -113,7 +113,7 @@ regulus2024_dialogue.dialogue = {
             responses = {next = "next"},
         },
         {
-            text = "One day, decades ago, I started on a journey to the nearby town, but as I walked away out of sight of this house, all my strength left me, and I almost collapsed.",
+            text = "One day, decades ago, I started on a journey to the nearby town, but as I walked\naway out of sight of this house, all my strength left me, and I almost collapsed.",
             responses = {next = "next"},
         },
         {
@@ -121,19 +121,19 @@ regulus2024_dialogue.dialogue = {
             responses = {next = "next"},
         },
         {
-            text = "...",
+            text = "Sigh...",
             responses = {next = "next"},
         },
         {
             text = "The reason you came here was to find a place to stay the night, yes?",
-            responses = {next = "next"},
+            responses = {yes = "Yes"},
         },
         {
             text = "There's a bedroom for you upstairs.",
             responses = {thanks = "Thank you"},
         },
         {
-            text = "I sense something special about you... I could really use your help. Please stay as long as you wish.",
+            text = "I sense something special about you... I could really use your help.\nPlease stay as long as you wish.",
         },
     }
     --[[

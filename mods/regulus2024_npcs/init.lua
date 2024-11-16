@@ -149,6 +149,33 @@ regulus2024_npcs.register_npc = function(name, def)
         _queued_to_appear = false,
         _queued_to_disappear = false,
         _awake_time = def._awake_time or nil,
+        _data = def._data or {}, -- Arbitrary data, such as "have I been talked to yet in this quest?"
+        _info_marker_id = nil, -- assuming singleplayer for this. Only one id.
+        _show_info_marker = function(self, player)
+            if self._info_marker_id then
+                player:hud_remove(self._info_marker_id)
+            end
+            self._info_marker_id = player:hud_add({
+                type = "image_waypoint",
+                scale = {x = 5, y = 5},
+                text = "regulus2024_arrow.png",
+                world_pos = self.object:get_pos() + vector.new(0, 2, 0),
+                alignment = {x = 0, y = -1},
+            })
+        end,
+        _update_info_marker_pos_and_scale = function(self, player)
+            if self._info_marker_id then
+                local dist = (self.object:get_pos():distance(player:get_pos()) + 8) / 50 -- Adding a constant to make it not jitter when you get close; it does mean that when you get close it will shrink, but that's cool
+                player:hud_change(self._info_marker_id, "scale", {x = 1 / dist, y = 1 / dist})
+                player:hud_change(self._info_marker_id, "world_pos", self.object:get_pos() + vector.new(0, 2, 0))
+            end
+        end,
+        _remove_info_marker = function(self, player)
+            if self._info_marker_id then
+                player:hud_remove(self._info_marker_id)
+                self._info_marker_id = nil
+            end
+        end,
 
         on_activate = def.on_activate or function(self, dtime, staticdata)
             if def.extra_on_activate then
@@ -156,6 +183,10 @@ regulus2024_npcs.register_npc = function(name, def)
             end
         end,
         on_step = def.on_step or function(self, dtime)
+            -- Update info marker/ nametag thing pos
+            for _, player in pairs(minetest.get_connected_players()) do
+                self._update_info_marker_pos_and_scale(self, player)
+            end
             -- QUEUED TO APPEAR/DISAPPEAR
             -- check if player is watching
             local is_player_watching = true
@@ -364,6 +395,7 @@ minetest.register_node("regulus2024_npcs:waypoint_debug", {
     walkable = false,
     pointable = minetest.is_creative_enabled(),
     drawtype = minetest.is_creative_enabled() and "normal" or "airlike",
+    paramtype = "light",
     groups = {unbreakable = 1},
 })
 

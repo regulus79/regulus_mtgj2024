@@ -9,6 +9,7 @@ if minetest.is_creative_enabled() then
                 pickaxeable = {maxlevel = 1, times = {0.2}},
                 axeable = {maxlevel = 1, times = {0.2}},
                 cuttable = {maxlevel = 1, times = {0.2}},
+                breakable_by_hand = {maxlevel = 1, times = {0.2}},
             }
         }
     })

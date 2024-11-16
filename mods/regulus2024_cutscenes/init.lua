@@ -66,5 +66,7 @@ regulus2024_cutscenes.start_intro = function(player)
     end
     minetest.after(time, function()
         player:hud_remove(blackscreen_id)
+        player:set_pos(vector.new(5,1,44))
+        player:set_look_horizontal(math.pi)
     end)
 end

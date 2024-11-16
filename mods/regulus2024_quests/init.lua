@@ -1,6 +1,32 @@
+
 regulus2024_quests = {}
 
 dofile(minetest.get_modpath("regulus2024_quests") .. "/quests.lua")
+
+-- Setup hud
+local quest_text_hud_id
+minetest.register_on_joinplayer(function(player)
+    quest_text_hud_id = player:hud_add({
+        type = "text",
+        text = "QUESTS",
+        number = 0xFFB930,
+        position = {x = 1, y = 0},
+        offset = {x = -100, y = 100},
+        alignment = {x = -1, y = 1},
+    })
+end)
+
+regulus2024_quests.construct_quest_hud_text = function(player)
+    local text = {"QUESTS"}
+    for questname, questdata in pairs(regulus2024_quests.get_active_quests(player)) do
+        table.insert(text, questdata.hud_text or regulus2024_quests.quests[questname].hud_text or nil)
+    end
+    return table.concat(text, "\n")
+end
+
+regulus2024_quests.update_quest_hud = function(player)
+    player:hud_change(quest_text_hud_id, "text", regulus2024_quests.construct_quest_hud_text(player))
+end
 
 --
 -- CALLBACKS
@@ -70,6 +96,7 @@ regulus2024_quests.add_active_quest = function(player, questname)
         regulus2024_quests.quests[questname].on_start_quest(player, active_quests[questname])
     end
     meta:set_string("active_quests", minetest.serialize(active_quests))
+    regulus2024_quests.update_quest_hud(player)
 end
 
 regulus2024_quests.set_active_quest_data = function(player, questname, questdata)
@@ -80,6 +107,8 @@ regulus2024_quests.set_active_quest_data = function(player, questname, questdata
         active_quests[questname] = questdata
         meta:set_string("active_quests", minetest.serialize(active_quests))
     end
+    -- Update quest hud beacuse hud_name could potentially have changed
+    regulus2024_quests.update_quest_hud(player)
 end
 
 regulus2024_quests.get_active_quests = function(player)
@@ -94,6 +123,7 @@ regulus2024_quests.remove_active_quest = function(player, questname)
         active_quests[questname] = nil
     end
     meta:set_string("active_quests", minetest.serialize(active_quests))
+    regulus2024_quests.update_quest_hud(player)
 end
 
 regulus2024_quests.add_completed_quest = function(player, questname)

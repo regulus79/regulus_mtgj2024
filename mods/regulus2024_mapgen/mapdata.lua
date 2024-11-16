@@ -8,7 +8,7 @@ local flats = {
             {
                 schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/LogHouse1v5.mts",
                 rotation = "0",
-                offset = vector.new(-15,0,-10),
+                offset = vector.new(-15,0,8),
                 rough_size = 20,
             },
             {
@@ -35,6 +35,12 @@ local flats = {
                 offset = vector.new(-15,-1,-38),
                 rough_size = 10,
             },
+            {
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Libraryv1.mts",
+                rotation = "0",
+                offset = vector.new(-42,0,-10),
+                rough_size = 50,
+            },
         },
         waypoints = {
             -- I really don't want to have to put which village this waypoint is part of in here since it should be 
@@ -42,7 +48,7 @@ local flats = {
             -- its sibling waypoints unless we know the village.
             main_intersection = {
                 pos = vector.new(2,1,1),
-                radius = 5,
+                radius = 3,
                 neighbors = {"outside_main_npc_house", "near_town_hall", "towards_marketplace"},
                 village = 1
             },
@@ -118,6 +124,90 @@ local flats = {
                 neighbors = {"center_marketplace"},
                 village = 1
             },
+            outside_library = {
+                pos = vector.new(-4,1,-5),
+                radius = 1,
+                neighbors = {"main_intersection", "outside_library_door"},
+                village = 1
+            },
+            outside_library_door = {
+                pos = vector.new(-9,1,-5),
+                radius = 0,
+                neighbors = {"outside_library", "inside_library_door"},
+                village = 1
+            },
+            inside_library_door = {
+                pos = vector.new(-12,1,-5),
+                radius = 0,
+                neighbors = {"outside_library_door", "inside_library_lobby"},
+                village = 1
+            },
+            inside_library_lobby = {
+                pos = vector.new(-15,1,-5),
+                radius = 2,
+                neighbors = {"inside_library_door", "inside_library_before_first_doorway"},
+                village = 1
+            },
+            inside_library_before_first_doorway = {
+                pos = vector.new(-16,1,-3),
+                radius = 0,
+                neighbors = {"inside_library_lobby", "inside_library_after_first_doorway"},
+                village = 1
+            },
+            inside_library_after_first_doorway = {
+                pos = vector.new(-16,1,-1),
+                radius = 0,
+                neighbors = {"inside_library_before_first_doorway", "inside_library_second_room_corner"},
+                village = 1
+            },
+            inside_library_second_room_corner = {
+                pos = vector.new(-12,1,3),
+                radius = 0,
+                neighbors = {"inside_library_after_first_doorway", "inside_library_second_room_center"},
+                village = 1
+            },
+            inside_library_second_room_center = {
+                pos = vector.new(-13,1,2),
+                radius = 0,
+                neighbors = {"inside_library_second_room_corner"},
+                village = 1
+            },
+            inside_library_before_second_doorway = {
+                pos = vector.new(-17,1,2),
+                radius = 0,
+                neighbors = {"inside_library_after_first_doorway", "inside_library_after_second_doorway"},
+                village = 1
+            },
+            inside_library_after_second_doorway = {
+                pos = vector.new(-19,1,2),
+                radius = 0,
+                neighbors = {"inside_library_before_second_doorway", "inside_library_stair_room"},
+                village = 1
+            },
+            inside_library_stair_room = {
+                pos = vector.new(-22,1,0),
+                radius = 3,
+                neighbors = {"inside_library_after_second_doorway", "inside_library_before_hidden_doorway"},
+                village = 1
+            },
+            inside_library_before_hidden_doorway = {
+                pos = vector.new(-25,1,-2),
+                radius = 0,
+                neighbors = {"inside_library_stair_room", "inside_library_after_hidden_doorway"},
+                village = 1
+            },
+            inside_library_after_hidden_doorway = {
+                pos = vector.new(-27,1,-2),
+                radius = 0,
+                neighbors = {"inside_library_before_hidden_doorway", "inside_library_hidden_room"},
+                village = 1
+            },
+            inside_library_hidden_room = {
+                pos = vector.new(-31,1,-2),
+                radius = 2,
+                neighbors = {"inside_library_after_hidden_doorway"},
+                village = 1
+            },
         },
         spawners = {
             -- Note that some spawners are part of the buildings they are in, and are not listed here
@@ -140,7 +230,7 @@ lamp_posts_village1 = {
     vector.new(7, 1, -20),
     vector.new(0, 1, 8),
     vector.new(3, 1, 13),
-    vector.new(12, 1, 21),
+    vector.new(15, 1, 29),
     vector.new(12, 1, 11),
     vector.new(9, 1, 7),
     --vector.new(6, 1, 5),

@@ -180,5 +180,6 @@ for i = 1, 2 do
     })
 end
 
+dofile(minetest.get_modpath("regulus2024_nodes").."/books.lua")
 
 dofile(minetest.get_modpath("regulus2024_nodes").."/stairs.lua")

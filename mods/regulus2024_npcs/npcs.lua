@@ -24,8 +24,18 @@ regulus2024_npcs.register_npc("regulus2024_npcs:mainnpc", {
     extra_on_activate = function(self)
         self._general_walk_target = self.object:get_pos()
     end,
+    extra_on_step = function(self)
+        -- this is so bad. aaa it needs to check every tick if it's time to set the nametag. aaa why can't I use callbacks
+        for _, player in pairs(minetest.get_connected_players()) do
+            if regulus2024_quests.get_active_quests(player)["find_a_place_to_stay"] and self._data.find_a_place_to_stay == nil then
+                self._show_info_marker(self,player)
+                self._data.find_a_place_to_stay = true
+            end
+        end
+    end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
+        self. _remove_info_marker(self, clicker)
         if regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"] then
             regulus2024_dialogue.start_dialogue(clicker, "find_a_place_to_stay" .. tostring(regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"].num_villagers_encountered + 1))
         else
@@ -45,8 +55,18 @@ regulus2024_npcs.register_npc("regulus2024_npcs:sidenpc1", {
     extra_on_activate = function(self)
         self._general_walk_target = self.object:get_pos()
     end,
+    extra_on_step = function(self)
+        -- this is so bad. aaa it needs to check every tick if it's time to set the nametag. aaa why can't I use callbacks
+        for _, player in pairs(minetest.get_connected_players()) do
+            if regulus2024_quests.get_active_quests(player)["find_a_place_to_stay"] and self._data.find_a_place_to_stay == nil then
+                self._show_info_marker(self,player)
+                self._data.find_a_place_to_stay = true
+            end
+        end
+    end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
+       self. _remove_info_marker(self, clicker)
         if regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"] then
             regulus2024_dialogue.start_dialogue(clicker, "find_a_place_to_stay" .. tostring(regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"].num_villagers_encountered + 1))
         else
@@ -64,8 +84,18 @@ regulus2024_npcs.register_npc("regulus2024_npcs:sidenpc2", {
     extra_on_activate = function(self)
         self._general_walk_target = self.object:get_pos()
     end,
+    extra_on_step = function(self)
+        -- this is so bad. aaa it needs to check every tick if it's time to set the nametag. aaa why can't I use callbacks
+        for _, player in pairs(minetest.get_connected_players()) do
+            if regulus2024_quests.get_active_quests(player)["find_a_place_to_stay"] and self._data.find_a_place_to_stay == nil then
+                self._show_info_marker(self,player)
+                self._data.find_a_place_to_stay = true
+            end
+        end
+    end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
+        self. _remove_info_marker(self, clicker)
         if regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"] then
             regulus2024_dialogue.start_dialogue(clicker, "find_a_place_to_stay" .. tostring(regulus2024_quests.get_active_quests(clicker)["find_a_place_to_stay"].num_villagers_encountered + 1))
         else
@@ -230,8 +260,23 @@ regulus2024_npcs.register_npc("regulus2024_npcs:oldman", {
     extra_on_activate = function(self)
         self._general_walk_target = self.object:get_pos()
     end,
+    extra_on_step = function(self)
+        -- this is so bad. aaa it needs to check every tick if it's time to set the nametag. aaa why can't I use callbacks
+        for _, player in pairs(minetest.get_connected_players()) do
+            if regulus2024_quests.get_active_quests(player)["ask_wizard_for_place_to_stay"] and self._data.ask_wizard_for_place_to_stay == nil then
+                self._show_info_marker(self,player)
+                self._data.ask_wizard_for_place_to_stay = true
+            end
+            if regulus2024_quests.get_active_quests(player)["talk_to_wizard_again"] and self._data.talk_to_wizard_again == nil then
+                self._show_info_marker(self,player)
+                self._data.talk_to_wizard_again = true
+            end
+        end
+    end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
+        self. _remove_info_marker(self, clicker)
+        self.object:set_yaw(vector.dir_to_rotation(clicker:get_pos():direction(self.object:get_pos())).y + math.pi)
         if regulus2024_quests.get_active_quests(clicker)["ask_wizard_for_place_to_stay"] then
             regulus2024_dialogue.start_dialogue(clicker, "ask_wizard_for_place_to_stay")
         end
