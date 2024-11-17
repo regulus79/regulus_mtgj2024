@@ -58,3 +58,16 @@ for i=1,4 do
         param2_max = 8 + 32 + 4,
     })
 end
+
+--[[
+-- This is not great. but I need the lights in the library to work
+minetest.register_abm({
+    label = "make the light work, replace em",
+    nodenames = {"regulus2024_nodes:bookshelf_"..bookshelf_type},
+    interval = 3,
+    chance = 1,
+    action = function(pos)
+        minetest.set_node()
+    end
+
+})]]

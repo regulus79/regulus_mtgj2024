@@ -13,6 +13,14 @@ if minetest.is_creative_enabled() then
             }
         }
     })
+else
+    minetest.register_tool(":",{
+        tool_capabilities = {
+            groupcaps = {
+                breakable_by_hand = {maxlevel = 1, times = {0.2}},
+            }
+        }
+    })
 end
 
 minetest.register_craftitem("regulus2024_admintools:screwdriver", {

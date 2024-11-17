@@ -69,8 +69,110 @@ regulus2024_quests.quests = {
         radius = 2,
         on_complete = function(player, questdata)
             minetest.debug("You compleded the go to bedroom house quest!")
-            --regulus2024_quests.add_active_quest(player, "talk_to_wizard_again")
+            regulus2024_quests.add_active_quest(player, "read_the_book_on_floor")
         end
+    },
+    read_the_book_on_floor = {
+        type = "read_book",
+        book_id = "bedroom_book",
+        hud_text = "Read the book on the floor",
+        on_complete = function(player, questdata)
+            minetest.debug("You compleded the read the book quest!")
+            regulus2024_quests.add_active_quest(player, "read_more_bedroom_books")
+        end
+    },
+    read_more_bedroom_books = {
+        type = "custom",
+        hud_text = "Find more books",
+        on_start_quest = function(player, questdata)
+            questdata.num_books_read = 0
+        end,
+        on_read_book = function(player, book_id, questdata)
+            if book_id == "bedroom_book2" or book_id == "bedroom_book3" then
+                questdata.num_books_read = questdata.num_books_read + 1
+            end
+            if questdata.num_books_read >= 2 then
+                minetest.debug("You compleded the read more books quest!")
+                regulus2024_quests.complete_quest(player, "read_more_bedroom_books")
+                regulus2024_quests.add_active_quest(player, "find_the_library")
+            end
+            return questdata
+        end
+    },
+    find_the_library = {
+        type = "cast_spell",
+        spell_id = "reveal",
+        hud_text = "Find the Library",
+        on_complete = function(player, questdata)
+            minetest.debug("You compleded the find the library quest!")
+            regulus2024_quests.add_active_quest(player, "enter_the_library")
+        end
+    },
+    enter_the_library = {
+        type = "go_to_pos",
+        hud_text = "",
+        pos = vector.new(-31,0,-2),
+        radius = 3,
+        on_complete = function(player, questdata)
+            minetest.debug("You compleded the enter the library quest!")
+            minetest.after(10, function()
+                regulus2024_quests.add_active_quest(player, "talk_to_wizard_in_library")
+            end)
+        end
+    },
+    talk_to_wizard_in_library = {
+        type = "complete_dialogue",
+        hud_text = "Talk to the Wizard",
+        dialogue_id = "talk_to_wizard_in_library",
+        on_complete = function(player, questdata)
+            -- Find the npc. UGH this is bad but it's the only way I know of, since you can't serialize objects to store in meta, cuz like what if they rejoin?
+            for object in minetest.objects_inside_radius(player:get_pos(), 8) do
+                if not object:is_player() and object:get_luaentity().name == "regulus2024_npcs:oldman" then
+                    object:get_luaentity()._force_disappear = true
+                end
+            end
+            regulus2024_quests.add_active_quest(player, "go_to_the_pedestal")
+        end
+    },
+    go_to_the_pedestal = {
+        type = "go_to_pos",
+        hud_text = "Travel to the Pedestal of Banishment",
+        pos = villages[2].pos,
+        radius = 10,
+        on_complete = function(player, questdata)
+            regulus2024_quests.add_active_quest(player, "find_the_book_of_banishment")
+        end
+    },
+    find_the_book_of_banishment = {
+        type = "read_book",
+        book_id = "the_book_of_banishment",
+        hud_text = "Find the Book of Banishment",
+        on_complete = function(player, questdata)
+            regulus2024_quests.add_active_quest(player, "find_all_four_books")
+        end
+    },
+    find_all_four_books = {
+        type = "custom",
+        hud_text = "Find the four books",
+        on_start_quest = function(player, questdata)
+            questdata.num_books_read = 0
+        end,
+        on_complete = function(player, questdata)
+            if book_id == "the_book_of_light" or book_id == "the_book_of_darkness" or book_id == "the_book_of_truth" or book_id == "the_book_of_lies" then
+                questdata.num_books_read = questdata.num_books_read + 1
+            end
+            if questdata.num_books_read >= 4 then
+                minetest.debug("You compleded the read more books quest!")
+                regulus2024_quests.complete_quest(player, "find_all_four_books")
+                regulus2024_quests.add_active_quest(player, "banish_the_darkness")
+            end
+            return questdata
+        end
+    },
+    banish_the_darkness = {
+        type = "custom",
+        hud_text = "Banish the Darkness",
+        -- To be handled by the spell. If the spell is successful, it will complete this quest.
     },
 
 --[[

@@ -271,17 +271,35 @@ regulus2024_npcs.register_npc("regulus2024_npcs:oldman", {
                 self._show_info_marker(self,player)
                 self._data.talk_to_wizard_again = true
             end
+            if regulus2024_quests.get_active_quests(player)["talk_to_wizard_in_library"] and self._data.teleported_to_library == nil then
+                local props = self.object:get_properties()
+                props.is_visible = false
+                self.object:set_properties(props)
+                self.object:set_pos(vector.new(-28, 0.5, -2))
+                self._walk_target = villages[1].waypoints.inside_library_hidden_room.pos
+                --self._state = "idle"
+                self._queued_to_appear = true
+                self._data.teleported_to_library = true
+                minetest.debug("I am here!!")
+            end
+            if regulus2024_quests.get_active_quests(player)["talk_to_wizard_in_library"] and self._data.talk_to_wizard_in_library == nil and self.object:get_properties().is_visible then
+                self._show_info_marker(self, player)
+                self._data.talk_to_wizard_in_library = true
+            end
         end
     end,
     extra_on_rightclick = function(self, clicker)
         self._look_target = clicker
-        self. _remove_info_marker(self, clicker)
+        self._remove_info_marker(self, clicker)
         self.object:set_yaw(vector.dir_to_rotation(clicker:get_pos():direction(self.object:get_pos())).y + math.pi)
         if regulus2024_quests.get_active_quests(clicker)["ask_wizard_for_place_to_stay"] then
             regulus2024_dialogue.start_dialogue(clicker, "ask_wizard_for_place_to_stay")
         end
         if regulus2024_quests.get_active_quests(clicker)["talk_to_wizard_again"] then
             regulus2024_dialogue.start_dialogue(clicker, "talk_to_wizard_again")
+        end
+        if regulus2024_quests.get_active_quests(clicker)["talk_to_wizard_in_library"] then
+            regulus2024_dialogue.start_dialogue(clicker, "talk_to_wizard_in_library")
         end
     end
 })

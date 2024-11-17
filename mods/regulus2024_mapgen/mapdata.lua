@@ -3,7 +3,7 @@ local flats = {
     {
         pos = vector.new(0,0.4,0),
         size = 50,
-        buffer = 50,
+        buffer = 100,
         buildings = {
             {
                 schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/LogHouse1v5.mts",
@@ -36,7 +36,7 @@ local flats = {
                 rough_size = 10,
             },
             {
-                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Libraryv1.mts",
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Libraryv3.mts",
                 rotation = "0",
                 offset = vector.new(-42,0,-10),
                 rough_size = 50,
@@ -217,7 +217,19 @@ local flats = {
             {name = "regulus2024_npcs:villagenpc1_spawner", pos = vector.new(25, 1, 7)},
         }
     },
-    {pos = vector.new(300,0.4,0), size = 20, buffer = 20},
+    {
+        pos = vector.new(230,0.4,-110),
+        size = 20,
+        buffer = 50,
+        buildings = {
+            {
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Pedestalsv1.mts",
+                rotation = "0",
+                offset = vector.new(-5,1,-5),
+                rough_size = 15,
+            },
+        }
+    },
     {pos = vector.new(0,0.4,500), size = 30, buffer = 50},
 }
 
@@ -252,12 +264,14 @@ end
 
 
 local paths = {
-    {start = vector.new(0,0,0), dst = vector.new(300,0,0), width = 5, randomness = 1},
+    {start = vector.new(0,0,0), dst = vector.new(45,0,10), width = 5, randomness = 1},
+    {start = vector.new(45,0,10), dst = vector.new(230,0,-110), width = 5, randomness = 1},
     {start = vector.new(0,0,0), dst = vector.new(0,20,500), width = 5, randomness = 1},
     {start = vector.new(300,0,0), dst = vector.new(0,20,500), width = 2, randomness = 1},
     --{start = vector.new(0,0,0), dst = vector.new(-500,20,500), width = 5}
     -- Paths within village
     {start = vector.new(0,0,0), dst = vector.new(0,0,-20), width = 5, randomness = 0},
+    {start = vector.new(6,0,15), dst = vector.new(-4,0,21), width = 2, randomness = 0},
 }
 
 local path_endpoint_interp_length = 20

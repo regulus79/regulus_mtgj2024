@@ -31,7 +31,7 @@ local books = {
             
             minetest.wrap_text("Te ti gaty na, taja mera gy sote li. Sefenybi. Tequ, tete cobato mo. Sese. Xesesu pekatu. Roseseti. Xu le ne. Se, poto. Xo. Ta ke. Nytape ta peti, nelese leratoto re, ho te te beze te fasequ. Tusele, tase re, mo pe. To, sasereqe rote pitere, sa pane se, sa tese fu me ka xala rato nityteta, letekyge. Gape lebo bati ny ro re ti fa teme se fesaso saby tase kewa teco tu pose, nivy, tume, sa, tege, wi, totynega, tesita lesa. Da be. Tameho te. La su, cu xate teki mana, ra.", page_character_wrap),
         },
-        shelf_texture = "regulus2024_book_binding_orange1.png",
+        shelf_texture = "regulus2024_book_binding_orange2.png",
     },
     bedroom_book3 = {
         title = "Passage",
@@ -42,9 +42,44 @@ local books = {
             minetest.wrap_text("Beto kupeto zosa teresy tetese ry lero ne te ho segejate se ra liniro teto hi tetu tesula, te. Lemele lyta sete. Ta totuce se sa, netata tegono ce. Sapata, tijymi tony mero. Camoro bo, wa some tase co. Te tetoca motenuro rate xaxure zare lalo peta, mele, tysuga, la. Kose. Qase, to. Tyra zacase. Sy volone ci xutere ta to sete saso fa. Zateta tesy ceroxe peresoge ge mete. Mu. Tecetysa ke te, ruto so. Peto. Notowo tyta metali vaqu ta resafa, peretype. Totata si, talesa, kawi, vese za resu se. Mety. Siseca saru, taseto wereze saru.", page_character_wrap),
             minetest.wrap_text("Tu rexa, tume. Sy pelate ty bo. Ta lileso, setela ta meleta lebu tati, tu li, te lese tete tuse sa. Lenehe. Ge ti rato ra sisa. Tita, tololire caseke tu, tece. Co. Re gisi tule te so, meha ka, te titece to. Se. Dera nasa se, le. Ce sa resali mado, sysasate, ratere. Buge, to, sa fa sa. Sycosu tu sa, mu, sola, pa. Tihasi. Fece tone tyrare rimana se leta lote, moqu my koreselu teru, kebi, tinotato tebi te te teleso da, qase de be bosoto. Soleqe se busasoca ru be.", page_character_wrap),
             table.concat({
-                minetest.wrap_text("Spells are dangerous… but they can be useful. I will teach you a simple spell now, the spell of revealing. Say this: 'reveal et reveala'. Say it. That is all. It will show you passages which are hidden.", page_character_wrap),
+                minetest.wrap_text("Spells are dangerous… but they can be useful. I will teach you a simple spell now, the spell of revealing. Stand by the long stone brick wall downstairs and say this: 'reveal et reveala'. Say it. That is all. It will show you passages which are hidden.", page_character_wrap),
                 minetest.wrap_text("To re tatali sexehe bope pese nete. Piranaba tewa, syno, tera. Su rany hesa bomyrane. Nu rytuba ta so ma. Zy, te ve sitese texuna kese rage leni tiseta le tetelaxo, me. Xaso, roselyre ki repe tyqu sete te hitare, ra re nese, repipa. Letere, topilara te. Katu. Zu poti te se nifare. Te. Tema tahata, nyla tikosa ne. Losote. Terufo beka dotety ti teta tu, musy to tysu. Totisyte. Ryrenote ta sorevetu, sasane tenowedo. Ma telo. Rasuto lyke teta te paza tavu sytekoto mema la. Sytosa rexe tetuki. Ro tabero. Tefome rati tasa, pe ze sorame. Ja, ba.", page_character_wrap),
             }, "\n\n"),
+        },
+        shelf_texture = "regulus2024_book_binding_orange3.png",
+    },
+    the_book_of_banishment = {
+        title = "The Book of Banishment",
+        pages = {
+            minetest.wrap_text("Banish", page_character_wrap),
+        },
+        shelf_texture = "regulus2024_book_binding_orange2.png",
+    },
+    the_book_of_light = {
+        title = "The Book of Light",
+        pages = {
+            minetest.wrap_text("Just say it.", page_character_wrap)
+        },
+        shelf_texture = "regulus2024_book_binding_orange1.png",
+    },
+    the_book_of_darkness = {
+        title = "The Book of Darkness",
+        pages = {
+            minetest.wrap_text("Just say it.", page_character_wrap)
+        },
+        shelf_texture = "regulus2024_book_binding_orange2.png",
+    },
+    the_book_of_truth = {
+        title = "The Book of Truth",
+        pages = {
+            minetest.wrap_text("Just say it.", page_character_wrap)
+        },
+        shelf_texture = "regulus2024_book_binding_orange3.png",
+    },
+    the_book_of_lies = {
+        title = "The Book of Lies",
+        pages = {
+            minetest.wrap_text("Just say it.", page_character_wrap)
         },
         shelf_texture = "regulus2024_book_binding_orange1.png",
     },
@@ -158,7 +193,7 @@ for _,bookshelf_type in pairs(bookshelf_types) do
             local books = inv:get_list("books")
             if books == nil then
                 local booklist = {"","","","","","",""}
-                if bookshelf_type == "random" then
+                if bookshelf_type == "random" or  bookshelf_type == "library1" or bookshelf_type == "library2" or bookshelf_type == "library3" or bookshelf_type == "library4" then
                     for i = 1,7 do
                         if math.random()<0.9 then
                             booklist[i] = "regulus2024_nodes:book_closed_" .. random_books[math.random(#random_books)]
@@ -171,6 +206,22 @@ for _,bookshelf_type in pairs(bookshelf_types) do
                     local rand = math.random(6)
                     booklist[rand] = "regulus2024_nodes:book_closed_bedroom_book2"
                     booklist[rand + math.random(7 - rand)] = "regulus2024_nodes:book_closed_bedroom_book3"
+                end
+                if bookshelf_type == "library1" then
+                    local rand = math.random(7)
+                    booklist[rand] = "regulus2024_nodes:book_closed_the_book_of_light"
+                end
+                if bookshelf_type == "library2" then
+                    local rand = math.random(7)
+                    booklist[rand] = "regulus2024_nodes:book_closed_the_book_of_darkness"
+                end
+                if bookshelf_type == "library3" then
+                    local rand = math.random(7)
+                    booklist[rand] = "regulus2024_nodes:book_closed_the_book_of_truth"
+                end
+                if bookshelf_type == "library4" then
+                    local rand = math.random(7)
+                    booklist[rand] = "regulus2024_nodes:book_closed_the_book_of_lies"
                 end
                 inv:set_list("books", booklist)
                 update_bookshelf(pos)
@@ -247,6 +298,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             if tonumber(i) then
                 show_book_page(player, bookid, tonumber(i))
             end
+        end
+        if fields.quit then
+            regulus2024_quests.on_read_book(player, bookid)
         end
     end
 end)

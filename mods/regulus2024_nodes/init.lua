@@ -1,3 +1,6 @@
+
+local villages = dofile(minetest.get_modpath("regulus2024_mapgen") .. "/mapdata.lua")
+
 regulus2024_nodes = {}
 
 minetest.register_node("regulus2024_nodes:stone1", {
@@ -101,7 +104,7 @@ minetest.register_node("regulus2024_nodes:lantern1", {
     tiles = {"regulus2024_lantern1.png"},
     paramtype = "light",
     groups = {pickaxeable = 1},
-    light_source = 10,
+    light_source = 14,
 })
 
 for i = 1,2 do
@@ -191,24 +194,42 @@ for i = 1, 2 do
         drawtype = "allfaces",
         paramtype = "light",
         groups = {pickaxeable = 1},
-    })
-    minetest.register_abm({
-        label = "Make the stonebrick" .. i .. " walkthrough",
-        nodenames = {"regulus2024_nodes:stonebrick_not_walkthrough" .. i},
-        interval = 3,
-        chance = 1,
-        action = function(pos)
-            if pos == vector.new(26, 1, -2) or pos == vector.new(26, 2, -2) then
-                for _, player in pairs(minetest.get_connected_players()) do
-                    if regulus2024_quests.get_completed_quests(player)["use_the_spell_of_revealing"] then
-                        minetest.set_node(pos, {name = "regulus2024_nodes:stonebrick_walkthrough" .. i})
-                        minetest.debug("Maek the stone walkthrough!")
-                    end
-                end
-            end
-        end
+        light_source = 3,
     })
 end
+
+minetest.register_node("regulus2024_nodes:pedestal_finder", {
+    description = "Staff of Finding",
+    tiles = {"regulus2024_wood3.png"},
+    drawtype = "nodebox",
+    node_box = {
+        type = "fixed",
+        fixed = {-1/16, -0.5, -1/16, 1/16, 1, 1/16},
+    },
+    light_source = 5,
+    paramtype = "light",
+    groups = {pickaxeable = 1, breakable_by_hand = 1},
+    on_construct = function(pos)
+        local direction_to_pedestal = (villages[2].pos - pos):normalize()
+        local meta = minetest.get_meta(pos)
+        meta:set_int("particlespawner_id", minetest.add_particlespawner({
+            amount = 10,
+            time = 0,
+            texture = "regulus2024_pedestal_finder_particle.png",
+            vel = {
+                min = direction_to_pedestal,
+                max = direction_to_pedestal * 2 + vector.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5),
+            },
+            pos = pos + vector.new(0, 1, 0),
+        }))
+        minetest.debug("spawner!")
+    end,
+    on_destruct = function(pos)
+        local meta = minetest.get_meta(pos)
+        minetest.delete_particlespawner(meta:get_int("particlespawner_id"))
+    end
+})
+
 
 
 dofile(minetest.get_modpath("regulus2024_nodes").."/books.lua")

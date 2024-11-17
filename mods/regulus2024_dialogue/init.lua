@@ -42,7 +42,6 @@ end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     local modname, dialogue_id_plus_line = unpack(string.split(formname, ":"))
-    print(formname, dump(fields))
     if modname == "regulus2024_dialogue" then
         local dialogue_id, line_number = unpack(string.split(dialogue_id_plus_line, "_line_"))
         line_number = tonumber(line_number)
