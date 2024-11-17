@@ -222,7 +222,6 @@ minetest.register_node("regulus2024_nodes:pedestal_finder", {
             },
             pos = pos + vector.new(0, 1, 0),
         }))
-        minetest.debug("spawner!")
     end,
     on_destruct = function(pos)
         local meta = minetest.get_meta(pos)

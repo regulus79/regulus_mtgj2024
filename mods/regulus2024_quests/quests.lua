@@ -6,16 +6,13 @@ regulus2024_quests.quests = {
         type = "custom",
         hud_text = "Find a place to stay the night",
         on_start_quest = function(player, questdata)
-            minetest.debug("You started the talk to villagers quest!")
             questdata.num_villagers_encountered = 0
         end,
         on_finish_dialogue = function(player, dialogue_id, questdata)
             if dialogue_id == "find_a_place_to_stay1" or dialogue_id == "find_a_place_to_stay2" or dialogue_id == "find_a_place_to_stay3" then
                 questdata.num_villagers_encountered = questdata.num_villagers_encountered + 1
-                minetest.debug("You talked to a villager! So far:", questdata.num_villagers_encountered)
             end
             if questdata.num_villagers_encountered == 3 then
-                minetest.debug("You completed the talk to villagers quest")
                 regulus2024_quests.complete_quest(player, "find_a_place_to_stay")
                 regulus2024_quests.add_active_quest(player, "ask_wizard_for_place_to_stay")
             end
@@ -26,11 +23,9 @@ regulus2024_quests.quests = {
         hud_text = "Ask the Wizard",
         dialogue_id = "ask_wizard_for_place_to_stay",
         on_complete = function(player, questdata)
-            minetest.debug("You compleded the ask wizard for place to stay quest!")
             -- Find the npc. UGH this is bad but it's the only way I know of, since you can't serialize objects to store in meta, cuz like what if they rejoin?
             for object in minetest.objects_inside_radius(player:get_pos(), 8) do
                 if not object:is_player() and object:get_luaentity().name == "regulus2024_npcs:oldman" then
-                    minetest.debug("Found the old man, told him to go home")
                     object:get_luaentity()._target_waypoint = villages[1].waypoints.inside_library_second_room_center
                     object:get_luaentity()._state = "walk_to_waypoint"
                 end
@@ -44,7 +39,6 @@ regulus2024_quests.quests = {
         pos = vector.new(-15,0,0),
         radius = 3,
         on_complete = function(player, questdata)
-            minetest.debug("You compleded the go inside house quest!")
             regulus2024_quests.add_active_quest(player, "talk_to_wizard_again")
         end
     },
@@ -55,10 +49,8 @@ regulus2024_quests.quests = {
         on_complete = function(player, questdata)
             for object in minetest.objects_inside_radius(player:get_pos(), 8) do
                 if not object:is_player() and object:get_luaentity().name == "regulus2024_npcs:oldman" then
-                    minetest.debug("Found the old man, told him to go home")
                 end
             end
-            minetest.debug("You compleded the talk to the old man for a long time quest!")
             regulus2024_quests.add_active_quest(player, "go_to_the_bedroom")
         end
     },
@@ -68,7 +60,6 @@ regulus2024_quests.quests = {
         pos = vector.new(-18.5,4.5,-6.5),
         radius = 2,
         on_complete = function(player, questdata)
-            minetest.debug("You compleded the go to bedroom house quest!")
             regulus2024_quests.add_active_quest(player, "read_the_book_on_floor")
         end
     },
@@ -77,7 +68,6 @@ regulus2024_quests.quests = {
         book_id = "bedroom_book",
         hud_text = "Read the book on the floor",
         on_complete = function(player, questdata)
-            minetest.debug("You compleded the read the book quest!")
             regulus2024_quests.add_active_quest(player, "read_more_bedroom_books")
         end
     },
@@ -92,7 +82,6 @@ regulus2024_quests.quests = {
                 questdata.num_books_read = questdata.num_books_read + 1
             end
             if questdata.num_books_read >= 2 then
-                minetest.debug("You compleded the read more books quest!")
                 regulus2024_quests.complete_quest(player, "read_more_bedroom_books")
                 regulus2024_quests.add_active_quest(player, "find_the_library")
             end
@@ -104,7 +93,6 @@ regulus2024_quests.quests = {
         spell_id = "reveal",
         hud_text = "Find the Library",
         on_complete = function(player, questdata)
-            minetest.debug("You compleded the find the library quest!")
             regulus2024_quests.add_active_quest(player, "enter_the_library")
         end
     },
@@ -114,7 +102,6 @@ regulus2024_quests.quests = {
         pos = vector.new(-31,0,-2),
         radius = 3,
         on_complete = function(player, questdata)
-            minetest.debug("You compleded the enter the library quest!")
             minetest.after(10, function()
                 regulus2024_quests.add_active_quest(player, "talk_to_wizard_in_library")
             end)
@@ -162,7 +149,6 @@ regulus2024_quests.quests = {
                 questdata.num_books_read = questdata.num_books_read + 1
             end
             if questdata.num_books_read >= 4 then
-                minetest.debug("You compleded the read more books quest!")
                 regulus2024_quests.complete_quest(player, "find_all_four_books")
                 regulus2024_quests.add_active_quest(player, "banish_the_darkness")
             end

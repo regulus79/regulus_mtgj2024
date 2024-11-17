@@ -7,7 +7,6 @@ regulus2024_spells.spells = {
     reveal = {
         phrase = "reveal et reveala",
         func = function(player)
-            minetest.debug("Eyyy!")
             minetest.set_node(vector.new(-26, 1, -2), {name = "regulus2024_nodes:stonebrick_walkthrough2"})
             minetest.set_node(vector.new(-26, 2, -2), {name = "regulus2024_nodes:stonebrick_walkthrough2"})
         end

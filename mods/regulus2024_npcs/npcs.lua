@@ -234,7 +234,6 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
     extra_on_step = function(self, dtime)
         -- Randomize target waypoint every now and then to stop use from getting stuck forever
         if math.random() < 1 / 60 * dtime and self.object:get_velocity():length() < 0.1 then
-            minetest.debug("Randomizing pos!")
             local possible_destinations = {
                 "main_intersection",
                 "inside_town_hall",
@@ -280,7 +279,6 @@ regulus2024_npcs.register_npc("regulus2024_npcs:oldman", {
                 --self._state = "idle"
                 self._queued_to_appear = true
                 self._data.teleported_to_library = true
-                minetest.debug("I am here!!")
             end
             if regulus2024_quests.get_active_quests(player)["talk_to_wizard_in_library"] and self._data.talk_to_wizard_in_library == nil and self.object:get_properties().is_visible then
                 self._show_info_marker(self, player)

@@ -33,7 +33,6 @@ minetest.register_globalstep(function()
         minetest.set_timeofday(regulus2024_player.timeofday)
         local brightness = 1 - math.abs(regulus2024_player.timeofday - 0.5) * 2
         brightness = brightness * 0.25
-        minetest.debug(regulus2024_player.timeofday, brightness)
         for _, player in pairs(minetest.get_connected_players()) do
             player:set_sky({
                 base_color = {r = 245 * brightness, g = 130 * brightness, b = 36 * brightness},

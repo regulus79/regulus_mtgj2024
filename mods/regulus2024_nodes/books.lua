@@ -124,7 +124,6 @@ local update_bookshelf = function(pos)
     for i = 1,7 do
         local stack = booklist[i]
         local book_id = string.split(stack:get_name(), "regulus2024_nodes:book_closed_")[1]
-        minetest.debug(dump(book_id))
         if book_id then
             table.insert(formspec_table, "image_button["..(i*1.25 - 0.375 + 0.75)..",1.25;1.25,3.75;"..(books[book_id].shelf_texture or "regulus2024_book_binding_orange1.png")..";"..i..";]")
             table.insert(formspec_table, "tooltip["..i..";"..books[book_id].title.."]")
@@ -157,13 +156,11 @@ for _,bookshelf_type in pairs(bookshelf_types) do
         on_metadata_inventory_take = update_bookshelf,
         on_metadata_inventory_move = update_bookshelf,
         on_receive_fields = function(pos, formname, fields, sender)
-            minetest.debug(dump(fields))
             local meta = minetest.get_meta(pos)
             local inv = meta:get_inventory()
             local booklist = inv:get_list("books")
             for k,v in pairs(fields) do
                 if tonumber(k) then
-                    minetest.debug(booklist[tonumber(k)])
                     sender:get_inventory():add_item("main", booklist[tonumber(k)])
                     booklist[tonumber(k)] = ""
                 end
@@ -225,7 +222,6 @@ for _,bookshelf_type in pairs(bookshelf_types) do
                 end
                 inv:set_list("books", booklist)
                 update_bookshelf(pos)
-                minetest.debug("Init bookshelf")
             end
         end
     })
@@ -292,7 +288,6 @@ end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     local _, formname_split, bookid = unpack(string.split(formname, "_", false, 2))
-    minetest.debug(dump(fields), formname_split, bookid)
     if formname_split and bookid and formname_split == "nodes:book" and books[bookid] then
         for i, v in pairs(fields) do
             if tonumber(i) then
