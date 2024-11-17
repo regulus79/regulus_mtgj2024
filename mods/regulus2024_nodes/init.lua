@@ -99,6 +99,7 @@ minetest.register_node("regulus2024_nodes:gravel1", {
 minetest.register_node("regulus2024_nodes:lantern1", {
     description = "Test lantern1",
     tiles = {"regulus2024_lantern1.png"},
+    paramtype = "light",
     groups = {pickaxeable = 1},
     light_source = 10,
 })
@@ -178,7 +179,37 @@ for i = 1, 2 do
         tiles = {"regulus2024_stonebrick" .. i .. ".png"},
         groups = {pickaxeable = 1},
     })
+    minetest.register_node("regulus2024_nodes:stonebrick_not_walkthrough" .. i, {
+        description = "Test stone brick not walkthrough" .. i,
+        tiles = {"regulus2024_stonebrick" .. i .. ".png"},
+        groups = {pickaxeable = 1},
+    })
+    minetest.register_node("regulus2024_nodes:stonebrick_walkthrough" .. i, {
+        description = "Test stone brick walkthrough" .. i,
+        tiles = {"regulus2024_stonebrick" .. i .. ".png^regulus2024_stonebrick_walkthrough_overlay.png"},
+        walkable = false,
+        drawtype = "allfaces",
+        paramtype = "light",
+        groups = {pickaxeable = 1},
+    })
+    minetest.register_abm({
+        label = "Make the stonebrick" .. i .. " walkthrough",
+        nodenames = {"regulus2024_nodes:stonebrick_not_walkthrough" .. i},
+        interval = 3,
+        chance = 1,
+        action = function(pos)
+            if pos == vector.new(26, 1, -2) or pos == vector.new(26, 2, -2) then
+                for _, player in pairs(minetest.get_connected_players()) do
+                    if regulus2024_quests.get_completed_quests(player)["use_the_spell_of_revealing"] then
+                        minetest.set_node(pos, {name = "regulus2024_nodes:stonebrick_walkthrough" .. i})
+                        minetest.debug("Maek the stone walkthrough!")
+                    end
+                end
+            end
+        end
+    })
 end
+
 
 dofile(minetest.get_modpath("regulus2024_nodes").."/books.lua")
 
