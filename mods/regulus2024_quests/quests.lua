@@ -102,6 +102,7 @@ regulus2024_quests.quests = {
         pos = vector.new(-31,0,-2),
         radius = 3,
         on_complete = function(player, questdata)
+            regulus2024_player.timeofday = 0.3
             minetest.after(10, function()
                 regulus2024_quests.add_active_quest(player, "talk_to_wizard_in_library")
             end)
@@ -136,6 +137,12 @@ regulus2024_quests.quests = {
         hud_text = "Find the Book of Banishment",
         on_complete = function(player, questdata)
             regulus2024_quests.add_active_quest(player, "find_all_four_books")
+            minetest.after(28, function()
+                regulus2024_player.timeofday = 0
+            end)
+            minetest.after(30, function()
+                regulus2024_cutscenes.start_darkness_cutscene1(player)
+            end)
         end
     },
     find_all_four_books = {
@@ -144,13 +151,16 @@ regulus2024_quests.quests = {
         on_start_quest = function(player, questdata)
             questdata.num_books_read = 0
         end,
-        on_complete = function(player, questdata)
+        on_get_book = function(player, book_id, questdata)
             if book_id == "the_book_of_light" or book_id == "the_book_of_darkness" or book_id == "the_book_of_truth" or book_id == "the_book_of_lies" then
                 questdata.num_books_read = questdata.num_books_read + 1
             end
             if questdata.num_books_read >= 4 then
                 regulus2024_quests.complete_quest(player, "find_all_four_books")
                 regulus2024_quests.add_active_quest(player, "banish_the_darkness")
+                minetest.after(30, function()
+                    regulus2024_cutscenes.start_darkness_cutscene2(player)
+                end)
             end
             return questdata
         end

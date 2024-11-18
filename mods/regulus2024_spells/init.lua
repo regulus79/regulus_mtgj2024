@@ -37,6 +37,9 @@ regulus2024_spells.spells = {
             end
             if is_book_of_light_there and is_book_of_darkness_there and is_book_of_lies_there and is_book_of_lies_there then
                 minetest.debug("You win!")
+                regulus2024_player.timeofday = 0.5
+                regulus2024_player.normal_sky = true
+                --regulus2024_cutscenes.start_credits()
                 regulus2024_quests.complete_quest(player, "banish_the_darkness")
             end
         end

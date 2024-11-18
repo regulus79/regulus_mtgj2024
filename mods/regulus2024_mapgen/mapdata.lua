@@ -130,6 +130,12 @@ local flats = {
                 neighbors = {"main_intersection", "outside_library_door"},
                 village = 1
             },
+            wizard_spawn = {
+                pos = vector.new(-9,2,-4), -- y=2 so that it doesn't destory the spawner there
+                radius = 0,
+                neighbors = {"outside_library_door"},
+                village = 1
+            },
             outside_library_door = {
                 pos = vector.new(-9,1,-5),
                 radius = 0,

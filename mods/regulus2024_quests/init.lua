@@ -65,6 +65,22 @@ regulus2024_quests.on_read_book = function(player, book_id)
 end
 
 
+regulus2024_quests.on_get_book = function(player, book_id)
+    for questname, questdata in pairs(regulus2024_quests.get_active_quests(player)) do
+        local questdef = regulus2024_quests.quests[questname]
+        if questdef.type == "custom" then
+            local questdata = regulus2024_quests.get_active_quests(player)[questname]
+            if questdef.on_get_book then
+                local new_questdata = questdef.on_get_book(player, book_id, questdata) or questdata
+                regulus2024_quests.set_active_quest_data(player, questname, new_questdata)
+            end
+        elseif questdef.type == "get_book" and questdef.book_id == book_id then
+            regulus2024_quests.complete_quest(player, questname)
+        end
+    end
+end
+
+
 regulus2024_quests.on_cast_spell = function(player, spell_id)
     for questname, questdata in pairs(regulus2024_quests.get_active_quests(player)) do
         local questdef = regulus2024_quests.quests[questname]

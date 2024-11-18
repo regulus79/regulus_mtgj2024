@@ -253,7 +253,9 @@ local place_debug_blocks = function(vmanip)
             for _, waypoint in pairs(village.waypoints) do
                 local waypoint_pos = vector.round(waypoint.pos + village.pos)
                 if vector.in_area(waypoint_pos, emin, emax) then
-                    data[area:indexp(waypoint_pos)] = c_waypoint_debug
+                    if data[area:indexp(waypoint_pos)] == c_air then
+                        data[area:indexp(waypoint_pos)] = c_waypoint_debug
+                    end
                 end
             end
         end

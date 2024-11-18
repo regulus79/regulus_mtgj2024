@@ -35,6 +35,7 @@ minetest.register_node("regulus2024_nodes:dirt_with_grass1", {
         "regulus2024_dirt1.png",
         "regulus2024_dirt1.png^regulus2024_grass1_sideoverlay.png",
     },
+    light_source = 2,
     groups = {shovelable = 1},
 })
 

@@ -164,14 +164,14 @@ regulus2024_npcs.register_npc = function(name, def)
             })
         end,
         _update_info_marker_pos_and_scale = function(self, player)
-            if self._info_marker_id then
+            if self._info_marker_id and player:hud_get(self._info_marker_id).type == "image_waypoint" then
                 local dist = (self.object:get_pos():distance(player:get_pos()) + 8) / 50 -- Adding a constant to make it not jitter when you get close; it does mean that when you get close it will shrink, but that's cool
                 player:hud_change(self._info_marker_id, "scale", {x = 1 / dist, y = 1 / dist})
                 player:hud_change(self._info_marker_id, "world_pos", self.object:get_pos() + vector.new(0, 2, 0))
             end
         end,
         _remove_info_marker = function(self, player)
-            if self._info_marker_id then
+            if self._info_marker_id and player:hud_get(self._info_marker_id).type == "image_waypoint"  then
                 player:hud_remove(self._info_marker_id)
                 self._info_marker_id = nil
             end

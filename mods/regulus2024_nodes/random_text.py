@@ -4,12 +4,12 @@ import random
 #alphabet = list("et sarolnimpucbykghjvdzfwqx")
 consonants = list("tsrlnmpcbkghjvdzfwqx")
 vowels = list("eaoiuy")
-print(consonants)
-print(vowels)
-print(sorted(consonants))
-print(sorted(vowels))
-print(len(set(consonants)))
-print(len(set(vowels)))
+#print(consonants)
+#print(vowels)
+#print(sorted(consonants))
+#print(sorted(vowels))
+#print(len(set(consonants)))
+#print(len(set(vowels)))
 
 # what a Ziphy law! (I think)
 distribution_consonants = []
@@ -20,10 +20,10 @@ distribution_vowels = []
 for i,v in enumerate(vowels):
     distribution_vowels += [v,] * (len(vowels) // (i + 1))
 
-print(distribution_consonants)
-print(len(set(distribution_consonants)))
-print(distribution_vowels)
-print(len(set(distribution_vowels)))
+#print(distribution_consonants)
+#print(len(set(distribution_consonants)))
+#print(distribution_vowels)
+#print(len(set(distribution_vowels)))
 
 def generate_word(length):
     text = ""
@@ -46,4 +46,4 @@ def generate_text(num_words):
     final_text = final_text[0].upper() + final_text[1:]
     return final_text
 
-print(generate_text(100))
+print(generate_text(30))

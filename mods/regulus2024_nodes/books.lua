@@ -1,6 +1,24 @@
 
 local page_character_wrap = 50
 
+
+local generate_random_book_binding_texture = function()
+    local base = "regulus2024_book_binding_redbg.png"
+    local colorize = "^[colorizehsl:" .. math.random(-30,30) .. ":" .. math.random(50,100)  .. ":" .. math.random(-50,0)
+    local decos = {
+        "regulus2024_book_binding_deco1.png",
+        "regulus2024_book_binding_deco2.png",
+        "regulus2024_book_binding_deco3.png",
+        "blank.png",
+        "blank.png",
+    }
+    local deco = decos[math.random(#decos)]
+    local shading = "regulus2024_book_binding_shading.png"
+    print(base .. colorize .. "^" .. deco .. "^" .. shading)
+    return base .. colorize .. "^" .. deco .. "^" .. shading
+end
+
+
 local books = {
     bedroom_book = {
         title = "Lore of the House",
@@ -15,7 +33,7 @@ local books = {
             minetest.wrap_text("Te. Xa. Cesa le ha xe, za, sole tata tesihe meryresa beko. Jese. Kise vesitu teto mate tase taselesy tyti, siqe vasocele. Ta ka lesulote raqy te titi lase raka ty zo. Se. Suti, be cexute hege nuse se te ri lu ty totyse ta, setu ca, torele synelele qutytu va. Re tunu, sewa sy rene le latequ. Terete. Natacere keci tu cafepe. Sele ra. Jemerita mupe ta setato, sexe ty lo siso. Susu te xe duso le rokusise, so nazoseta, ni saro ti daki, jilora se le. Ture. Toto sisa. Cobelu ro ke. Ti te, sabe tate sepo.", page_character_wrap),
             minetest.wrap_text("Nehe topana xote. Nesetyte xe teneso sy. Tesutote, zorema, tesecare sa tebe ke, jolyrace deta, to ty to ti taro zy, keky li fate to lutave. Nata. Te seka. Tetexene mi tesa, satela teto, ta vele. Pe. Totuqyqe lexoto sela se pe. Me le te. Tose xo bi ta lu tu. Talu jerele se to se le. Be, seto ce taseto ta te, syti mo, mosate pa niwe. Sesa, ti masita tatale. Teta re, petepusa. Hare, to, hepite te. Temexa xa gytere myzoty. Ty, tatete kutexa to te.", page_character_wrap),
         },
-        shelf_texture = "regulus2024_book_binding_orange1.png",
+        shelf_texture = generate_random_book_binding_texture(),
     },
     bedroom_book2 = {
         title = "Book of Quotes",
@@ -31,7 +49,7 @@ local books = {
             
             minetest.wrap_text("Te ti gaty na, taja mera gy sote li. Sefenybi. Tequ, tete cobato mo. Sese. Xesesu pekatu. Roseseti. Xu le ne. Se, poto. Xo. Ta ke. Nytape ta peti, nelese leratoto re, ho te te beze te fasequ. Tusele, tase re, mo pe. To, sasereqe rote pitere, sa pane se, sa tese fu me ka xala rato nityteta, letekyge. Gape lebo bati ny ro re ti fa teme se fesaso saby tase kewa teco tu pose, nivy, tume, sa, tege, wi, totynega, tesita lesa. Da be. Tameho te. La su, cu xate teki mana, ra.", page_character_wrap),
         },
-        shelf_texture = "regulus2024_book_binding_orange2.png",
+        shelf_texture = generate_random_book_binding_texture(),
     },
     bedroom_book3 = {
         title = "Passage",
@@ -46,65 +64,141 @@ local books = {
                 minetest.wrap_text("To re tatali sexehe bope pese nete. Piranaba tewa, syno, tera. Su rany hesa bomyrane. Nu rytuba ta so ma. Zy, te ve sitese texuna kese rage leni tiseta le tetelaxo, me. Xaso, roselyre ki repe tyqu sete te hitare, ra re nese, repipa. Letere, topilara te. Katu. Zu poti te se nifare. Te. Tema tahata, nyla tikosa ne. Losote. Terufo beka dotety ti teta tu, musy to tysu. Totisyte. Ryrenote ta sorevetu, sasane tenowedo. Ma telo. Rasuto lyke teta te paza tavu sytekoto mema la. Sytosa rexe tetuki. Ro tabero. Tefome rati tasa, pe ze sorame. Ja, ba.", page_character_wrap),
             }, "\n\n"),
         },
-        shelf_texture = "regulus2024_book_binding_orange3.png",
+        shelf_texture = generate_random_book_binding_texture(),
     },
     the_book_of_banishment = {
         title = "The Book of Banishment",
         pages = {
-            minetest.wrap_text("Banish", page_character_wrap),
+            table.concat({
+                minetest.wrap_text("You want to banish the darkness? A very noble task. Gather the four precious books and place each one on the pedestals, then cast the spell.", page_character_wrap),
+                minetest.wrap_text("Li. Ry. Te. Ri. Cuje qale, qi sate, tale. Ty nysede se. Deterese sytera. Re lacosiwe, xyreta ti, teme cyma, tale pesati, ta kose. Wece. Je gosidare funece siteta leri qo zo ne. Te tery. Me. Te rete, pa to ra. Lo tu te. Sytonine kale se, tu ruta, natuty leniso teso. Sego co, sa to ti seresama be. To neto. Seleli te re gosataro tisa sote tejira, re de tevu wata myfu be tave. Te telo talatyto tefaleta ri vasyde tita de, tyte ra. Ritesupu satu tote qete. Rimy. Be. Muve na, se le tata to matene, neva.", page_character_wrap),
+            }, "\n\n"),
+            table.concat({
+                minetest.wrap_text("Sepe botabo. Tome te telu qotetehe. Taly, tygyte. Tese taqapo ku roso gizoty. Meji se. Ti mega. Re metona carawe. Kene ve ru rore. Sefo kajexa satalu. Tetitale. Sytovo. Bega sa letowa leli ne tera sine tepe se ma. Tipelani ga, se te te, ta. He se, nasile tivuca ge, re lany ta, ry rege xato, hatateti. Rere sa. To, ra re ra fery sahe, ra sekajovo tyro ko to tesatege neco pelo si sa dase li neketyca te. Wa. Pyte, tete lo re mepeta, fetita pate tura se tena te tube sityto, tole lato fyce mi setu te tetose.", page_character_wrap),
+                minetest.wrap_text("Find The Book of Light, and find The Book of Darkness. Find The Book of Truth, and find The Book of Lies.", page_character_wrap),
+            }, "\n\n"),
+            table.concat({
+                minetest.wrap_text("The spell is simple. Stand amists the four books upon the four pedestals, and proclaim: banisha darknessa. If you have done correctly, the darkness will be no more.", page_character_wrap),
+                minetest.wrap_text("Feke wu dabere halisecy, ji liro rato lurete, te, caza mesa. Te nalera, sa le. Tawete sa. Mo, xe netisetu te, rerepa. Po raserete bosele. Qenu sito ni. Ne le sije po lasesa co ta, ba totaso jole lemaxe, cete. Kesoty ta ve, qe ta ja bosisyso, ra so na. Be tojose se. Ra metado qa mosa tu sapukazy sate hy ro ta, ja totete fa jenase. Tane, re, lysebo sytetapa bo, jotu ro gaty xame la se no, leto liteqa. Te, zo qipete letete mypama. Mi tese tene ni cesa. Sopa ja. Tesylusa xe ge vo mizase.", page_character_wrap),
+            }, "\n\n"),
         },
-        shelf_texture = "regulus2024_book_binding_orange2.png",
+        shelf_texture = generate_random_book_binding_texture(),
     },
     the_book_of_light = {
         title = "The Book of Light",
         pages = {
-            minetest.wrap_text("Just say it.", page_character_wrap)
+            minetest.wrap_text("Du toze, to dyce ryta li suba te pilasa. Le se, ta so so, temy. Na xa wesi, se fe. Totyla tavu taso xose, tu, temo tobo xe lu noteha ti tetu, qelase tu te vete terexe sa tobetima, re. Sesa pa casate sela ty re le ty. Tema selesase ta. Toseta ti. Ce. Ve pege. Py tinoty. Melalose zelejeca. Gita hy. Ko semitele lanuta. Te. Xabe ty, se teci losecaco, saliqe si. Pi ta, sete tyfata tema ta to pe me. Sata. Ta pe, rave, te ty nutaqu me. No sa te ce mece.", page_character_wrap)
         },
-        shelf_texture = "regulus2024_book_binding_orange1.png",
+        shelf_texture = "regulus2024_book_binding_whitebg.png^regulus2024_book_binding_shading.png",
     },
     the_book_of_darkness = {
         title = "The Book of Darkness",
         pages = {
-            minetest.wrap_text("Just say it.", page_character_wrap)
+            minetest.wrap_text("Ze lepe neweso. Coma titohu rejeru vinyha cala, cota ni. Telete take ketu so. Ta. Tesela gitaba se soba setare bu se. Sose nasyte. Tame. Sityve. De. Te. Luti lo. Muluse mete lateta tite re sato to. Pizitaca. Tere zo, bete metiru sanalofa mete resa sa ca leto baqo. La, ru, metevesi veti ta ta, lesake ba, re, vevosa, de, lysate. Ca ro tapare tese re nejo tara kesu, tagene. Ce nasa. Le pe metese. Li, temate so motase qe. Vana rysa tity reti tata, sa ke ta tena. Laqarytu so. Qypube tamonexu sesy.", page_character_wrap)
         },
-        shelf_texture = "regulus2024_book_binding_orange2.png",
+        shelf_texture = "regulus2024_book_binding_whitebg.png^[colorizehsl:0:0:-80^regulus2024_book_binding_deco1.png^regulus2024_book_binding_shading.png",
     },
     the_book_of_truth = {
         title = "The Book of Truth",
         pages = {
-            minetest.wrap_text("Just say it.", page_character_wrap)
+            minetest.wrap_text("Pe, te tu, bo me. Seqeteco tutabe ta, note, sa. We, ge. Kale. Ta za he se. Zeti gute sa nolenu rytytebe. Matyve pa noso, we mo le so qe. Ve, tutati. Xesefo tita pozurawo, tero lynataty. Talame, xa. Le, loto pa teto. Te tyrabe tate, tu meteti, ha wete, te. Ce retitepe je te, sumese. Tare. Me. Si kate te. Sa pi mi. Ce tyle, nesi, ka teta, ta raqo, cy, jece, ryta sosa, sylete nelese ta. Fyreme nigijare tatese. Be josite. Retosete tasera te suna to talu xyse catite.", page_character_wrap)
         },
-        shelf_texture = "regulus2024_book_binding_orange3.png",
+        shelf_texture = "regulus2024_book_binding_whitebg.png^regulus2024_book_binding_deco2.png^regulus2024_book_binding_shading.png",
     },
     the_book_of_lies = {
         title = "The Book of Lies",
         pages = {
-            minetest.wrap_text("Just say it.", page_character_wrap)
+            minetest.wrap_text("Pete, lo myto tunebeba zatomepe ne, resi, sa ratu sate, kemotu teru mele. Ciresere liso. Noti lo, xehe bete pe. Jotepoti, nyla sa, bora, luza pute, py tewo. Lenabete neripama tereba. Sa tote, bo. Sy taze, tirefufa coju lodasa ty. Li. So seri. Tysa se cata seby, goko resitame sese tanivu pe ce. Te toha te jyne, qudo cehusete nase. Be, ty. Tonesexe. Na te, te, ta tatituxe. Pepere. Se paqeve. Lu fe tetata meba tene nuse, sevata mi, tase la. Be case ke. Sy lisese sa sace te tosirope sokexi, tena maneta lotesu.", page_character_wrap)
         },
-        shelf_texture = "regulus2024_book_binding_orange1.png",
+        shelf_texture = "regulus2024_book_binding_whitebg.png^[colorizehsl:0:0:-50^regulus2024_book_binding_deco3.png^regulus2024_book_binding_shading.png",
     },
+    -- random books?
     how_to_cast_spells = {
         title = "How to Cast Spells",
         pages = {
             "Just say it."
         },
-        shelf_texture = "regulus2024_book_binding_orange1.png",
+        shelf_texture = generate_random_book_binding_texture(),
     },
     book_of_legends = {
         title = "Book of Legends",
         pages = {
             "Just say it."
         },
-        shelf_texture = "regulus2024_book_binding_orange2.png",
+        shelf_texture = generate_random_book_binding_texture(),
     },
     etaasjol_yyosojd = {
         title = "Etaasjol Yyosojd",
         pages = {
             "Just say it."
         },
-        shelf_texture = "regulus2024_book_binding_orange3.png",
+        shelf_texture = generate_random_book_binding_texture(),
     }
 }
+
+local random_sentences = {
+    "Taro, wetify, rase. La bamo, sase setutise. Ta, se se, to kese tetetitu se ta zetenyso tu tutote, re cywe.",
+    "Pelateqa. Hatese cy ta to muve nyrako. Botely la getele tetete, sesysaxu cerebo talosa, relo caje se toterije litytyre, tate.",
+    "Teteny ne. Ru gy vy mano gase ti teta za, ne xy ty tale, ru tamata, rudi za teseke, lu.",
+    "Ta te, tefi, te to ty sa ry ralyly. Pi si tecete te. No ce, re nu, liteso poti tele.",
+    "To, ti cujy tato semateza sabo kosa, tenora qi lere pese, zomoly qa, tesateta tetata paca seha lete lotesepa dy.",
+    "Be te. Meso totura de sefilu toro vo, ti, to te me xe tela tilo. Za, vatuhita nure, to he.",
+    "Fesa, ruvetetu capa jeto, fama ledene. Tetu noke wysosa, syri te susa bevamu donetale sewewo lyresymo taje dolodela titeke, ro.",
+    "Vo suja. Mebazata je ra, tesely tuhe, bi, time bisiwa sito setusano. Be, pi sonewe leherepe. Ce sotete sytefe.",
+    "Pa, sy tyle. Zura tocibuse. Kyla si. Zu, teta tena satytole ra, to te. Tesa. Nomo, ta, te tote, te.",
+    "Ta to. So, ty. Lute hetoty nesele rosetase xaxo, ku ri sule rone se. Sa, be te. Ne ra nete ta, taga taru serypo.",
+    "Karesose, tuwota caso, tije peve, ta, te te re ce tita. Tusetase te jatesupo ba tego kemo be sete secy, dese, rote se ve le. Tasa he. Tateryte.",
+    "Ta fy. Tetetice retete zota. Setu ma tane lepizahi, teba ku to ro takybeno tato tatu, ce. Lete ra te titoca zitere hisu, ne titeti to, xebe. Ry.",
+    "Tosa rexa lete ty. Bapose be keta tu. Nu sa se no rona, te ce vuna te tu, basore ne fe ne tebe, ta lo tazitesy myluteto se.",
+    "Ta ti. Tale, ma. Ma saluxy taqe toletute teca mare togi viso. Te tu jofe, fabeneta posisy tora, molala se, cezo wa wely teta sa le syta keqe.",
+    "Ni. To tuta sene tose, te. Su patete seromo tepu metehe, sapute tanetase tere tene cewele qu. Ho, tati fakico pe. Ni, roteju te tamy, pomo toho, duce se te.",
+}
+local title_words = {
+    "Fesa",
+    "Tetu",
+    "Teteny",
+    "Taro",
+    "Pelateqa",
+    "Zomoly",
+    "Donetale",
+    "Ruvetetu",
+    "Neneteta",
+    "Totatoqo",
+    "Pajyqosi",
+    "Vole",
+    "Syde",
+    "Tase",
+    "Vata",
+    "Totofe",
+    "Setetusi",
+    "Tasyte",
+    "Nekaso.",
+    "Lytetamu",
+    "Deremy",
+    "Kereme",
+    "Rotehafi",
+    "Benety",
+    "Talaty",
+    "Retosose",
+    "Loge.",
+}
+
+
+local random_books = {
+}
+
+for i = 1, 30 do
+    local pages = {}
+    for i = 1, math.random(5) do
+        pages[i] = minetest.wrap_text(random_sentences[math.random(#random_sentences)] .. " " .. random_sentences[math.random(#random_sentences)] .. " " .. random_sentences[math.random(#random_sentences)], page_character_wrap)
+    end
+    books["random"..i] = {
+        title = title_words[math.random(#title_words)] .. " " .. title_words[math.random(#title_words)],
+        pages = pages,
+        shelf_texture = generate_random_book_binding_texture(),
+    }
+    table.insert(random_books, "random"..i)
+end
 
 local update_bookshelf = function(pos)
     local meta = minetest.get_meta(pos)
@@ -142,9 +236,13 @@ local bookshelf_types = {
 }
 
 for _,bookshelf_type in pairs(bookshelf_types) do
+    local texture = "regulus2024_bookshelf_front6.png"
+    if bookshelf_type == "random" then
+        texture = "regulus2024_bookshelf_front5.png"
+    end
     minetest.register_node("regulus2024_nodes:bookshelf_" .. bookshelf_type, {
         description = "Test bookshelf " .. bookshelf_type,
-        tiles = {"regulus2024_bookshelf_top.png","regulus2024_bookshelf_side1.png"},
+        tiles = {"regulus2024_bookshelf_top.png", texture},
         groups = {pickaxeable = 1},
         allow_metadata_inventory_put = function(pos, listname, index, itemstack)
             if minetest.get_item_group(itemstack:get_name(), "book") ~= 0 then
@@ -162,6 +260,8 @@ for _,bookshelf_type in pairs(bookshelf_types) do
             for k,v in pairs(fields) do
                 if tonumber(k) then
                     sender:get_inventory():add_item("main", booklist[tonumber(k)])
+                    local book_id = string.split(booklist[tonumber(k)]:get_name(), ":book_closed_")[2]
+                    regulus2024_quests.on_get_book(sender, book_id)
                     booklist[tonumber(k)] = ""
                 end
             end
@@ -172,11 +272,6 @@ for _,bookshelf_type in pairs(bookshelf_types) do
     })
 end
 
-local random_books = {
-    "how_to_cast_spells",
-    "book_of_legends",
-    "etaasjol_yyosojd",
-}
 
 for _,bookshelf_type in pairs(bookshelf_types) do
     minetest.register_abm({
