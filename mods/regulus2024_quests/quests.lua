@@ -103,9 +103,10 @@ regulus2024_quests.quests = {
         radius = 3,
         on_complete = function(player, questdata)
             regulus2024_player.timeofday = 0.3
-            minetest.after(10, function()
+            minetest.after(8, function()
                 regulus2024_quests.add_active_quest(player, "talk_to_wizard_in_library")
             end)
+            regulus2024_quests.add_active_quest(player, "find_all_four_books")
         end
     },
     talk_to_wizard_in_library = {
@@ -124,7 +125,7 @@ regulus2024_quests.quests = {
     },
     go_to_the_pedestal = {
         type = "go_to_pos",
-        hud_text = "Travel to the Pedestal of Banishment",
+        hud_text = "Travel to the Pedestals of Banishment",
         pos = villages[2].pos,
         radius = 10,
         on_complete = function(player, questdata)
@@ -136,18 +137,26 @@ regulus2024_quests.quests = {
         book_id = "the_book_of_banishment",
         hud_text = "Find the Book of Banishment",
         on_complete = function(player, questdata)
-            regulus2024_quests.add_active_quest(player, "find_all_four_books")
-            minetest.after(28, function()
-                regulus2024_player.timeofday = 0
-            end)
-            minetest.after(30, function()
-                regulus2024_cutscenes.start_darkness_cutscene1(player)
-            end)
+            local find_all_four_books_questdata = regulus2024_quests.get_active_quests(player).find_all_four_books
+            if find_all_four_books_questdata then
+                find_all_four_books_questdata.hud_text = "Find the four books"
+                regulus2024_quests.set_active_quest_data(player, "find_all_four_books", find_all_four_books_questdata)
+            end
+            regulus2024_quests.add_active_quest(player, "meet_darkness1")
+        end
+    },
+    meet_darkness1 = {
+        type = "go_to_pos",
+        pos = vector.new(150, 0, -45),
+        radius = 50,
+        hud_text = "",
+        on_complete = function(player, questdata)
+            regulus2024_cutscenes.start_darkness_cutscene1(player)
         end
     },
     find_all_four_books = {
         type = "custom",
-        hud_text = "Find the four books",
+        hud_text = "",--"Find the four books", -- empty at first, onyl appears after find the book of banishment. This is to prevent bugs with players getting the books too early.
         on_start_quest = function(player, questdata)
             questdata.num_books_read = 0
         end,
@@ -158,11 +167,18 @@ regulus2024_quests.quests = {
             if questdata.num_books_read >= 4 then
                 regulus2024_quests.complete_quest(player, "find_all_four_books")
                 regulus2024_quests.add_active_quest(player, "banish_the_darkness")
-                minetest.after(30, function()
-                    regulus2024_cutscenes.start_darkness_cutscene2(player)
-                end)
+                regulus2024_quests.add_active_quest(player, "meet_darkness2")
             end
             return questdata
+        end
+    },
+    meet_darkness2 = {
+        type = "go_to_pos",
+        pos = vector.new(150, 0, -45),
+        radius = 50,
+        hud_text = "",
+        on_complete = function(player, questdata)
+            regulus2024_cutscenes.start_darkness_cutscene2(player)
         end
     },
     banish_the_darkness = {

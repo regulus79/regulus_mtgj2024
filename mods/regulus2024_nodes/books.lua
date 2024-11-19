@@ -39,7 +39,7 @@ local books = {
         title = "Book of Quotes",
         pages = {
             table.concat({
-                minetest.wrap_text("The library calls. It brings you freedom. It brings you freedom…. It is inside the walls…. Search inside the walls!", page_character_wrap),
+                minetest.wrap_text("The library calls. It brings you freedom. It brings you freedom…. It is behind the wall…. Search for a hidden passageway!", page_character_wrap),
                 minetest.wrap_text("Mota. Segity jeta, te, qezise tanoge tete. Ty tate tete teje, sa. Titatyte tysywa. Me, ty mu bi. Su le sere gese. Qe, ba, manete rara ribeta le nohogo kema, diti me meby. Pesa, syta vela lesuse tetaja, sa ma, qata ro. Le. Te sotynefe myte me. Vene, neha. Re ritipe. Tebasu, ta rita ry teti. Ty lole. Tirata bo. Mave. Sytase leze syti be, me. Revotute su to, temote sebe qise raryle, sy, setytono, tysi. Talo su. Ry xi ta nera. Ro mosa ti luse bo nyku me tely, ta ra ko ja. Re jato weta tijese xa.", page_character_wrap),
             }, "\n\n"),
             table.concat({
@@ -55,14 +55,15 @@ local books = {
         title = "Passage",
         pages = {
             table.concat({
+                minetest.wrap_text("Spells are dangerous… but they can be useful. I will teach you a simple spell now, the spell of revealing. Stand on the lamp in the floor downstairs and say this: 'reveal et reveala'. Say it. That is all. It will show you passages which are hidden.", page_character_wrap),
+                minetest.wrap_text("To re tatali sexehe bope pese nete. Piranaba tewa, syno, tera. Su rany hesa bomyrane. Nu rytuba ta so ma. Zy, te ve sitese texuna kese rage leni tiseta le tetelaxo, me. Xaso, roselyre ki repe tyqu sete te hitare, ra re nese, repipa. Letere, topilara te. Katu. Zu poti te se nifare. Te. Tema tahata, nyla tikosa ne. Losote. Terufo beka dotety ti teta tu, musy to tysu. Totisyte. Ryrenote ta sorevetu, sasane tenowedo. Ma telo. Rasuto lyke teta te paza tavu sytekoto mema la. Sytosa rexe tetuki. Ro tabero. Tefome rati tasa, pe ze sorame. Ja, ba.", page_character_wrap),
+            }, "\n\n"),
+            table.concat({
                 minetest.wrap_text("Kese, nomato. Ty. Wa qata re tozupati, to lekety. Tese tevenuty tebe. Pe la. Tema. Ta ve, ce mehe nepalo, se, ta, lepy, niri lagy. Lebete ceso botory, fa giqa re ta gene tatesane te no tate. Ro nijehe bese la petete sici terece semewe tety, ti, te nili retyte ce, tely. Helate. Tehe su misorito ty to. Pe robemedo, ka ra te leseto qe, nike fe, rylony ti qybetino. Rate, kytatu kymere sepa ryje. Ny ta reva, pe nozite qacaxyte kyha lepenety hete nu tunaca, xaje. Kasejafy pite za, melece so sehatole se, sy, lora seno.", page_character_wrap),
             }, "\n\n"),
             minetest.wrap_text("Beto kupeto zosa teresy tetese ry lero ne te ho segejate se ra liniro teto hi tetu tesula, te. Lemele lyta sete. Ta totuce se sa, netata tegono ce. Sapata, tijymi tony mero. Camoro bo, wa some tase co. Te tetoca motenuro rate xaxure zare lalo peta, mele, tysuga, la. Kose. Qase, to. Tyra zacase. Sy volone ci xutere ta to sete saso fa. Zateta tesy ceroxe peresoge ge mete. Mu. Tecetysa ke te, ruto so. Peto. Notowo tyta metali vaqu ta resafa, peretype. Totata si, talesa, kawi, vese za resu se. Mety. Siseca saru, taseto wereze saru.", page_character_wrap),
             minetest.wrap_text("Tu rexa, tume. Sy pelate ty bo. Ta lileso, setela ta meleta lebu tati, tu li, te lese tete tuse sa. Lenehe. Ge ti rato ra sisa. Tita, tololire caseke tu, tece. Co. Re gisi tule te so, meha ka, te titece to. Se. Dera nasa se, le. Ce sa resali mado, sysasate, ratere. Buge, to, sa fa sa. Sycosu tu sa, mu, sola, pa. Tihasi. Fece tone tyrare rimana se leta lote, moqu my koreselu teru, kebi, tinotato tebi te te teleso da, qase de be bosoto. Soleqe se busasoca ru be.", page_character_wrap),
-            table.concat({
-                minetest.wrap_text("Spells are dangerous… but they can be useful. I will teach you a simple spell now, the spell of revealing. Stand by the long stone brick wall downstairs and say this: 'reveal et reveala'. Say it. That is all. It will show you passages which are hidden.", page_character_wrap),
-                minetest.wrap_text("To re tatali sexehe bope pese nete. Piranaba tewa, syno, tera. Su rany hesa bomyrane. Nu rytuba ta so ma. Zy, te ve sitese texuna kese rage leni tiseta le tetelaxo, me. Xaso, roselyre ki repe tyqu sete te hitare, ra re nese, repipa. Letere, topilara te. Katu. Zu poti te se nifare. Te. Tema tahata, nyla tikosa ne. Losote. Terufo beka dotety ti teta tu, musy to tysu. Totisyte. Ryrenote ta sorevetu, sasane tenowedo. Ma telo. Rasuto lyke teta te paza tavu sytekoto mema la. Sytosa rexe tetuki. Ro tabero. Tefome rati tasa, pe ze sorame. Ja, ba.", page_character_wrap),
-            }, "\n\n"),
+            
         },
         shelf_texture = generate_random_book_binding_texture(),
     },

@@ -15,6 +15,9 @@ if minetest.is_creative_enabled() then
     })
 else
     minetest.register_tool(":",{
+        inventory_image = "blank.png",
+        wield_image = "regulus2024_hand.png",
+        wield_scale = {x = 1, y = 1, z = 3},
         tool_capabilities = {
             groupcaps = {
                 breakable_by_hand = {maxlevel = 1, times = {0.2}},

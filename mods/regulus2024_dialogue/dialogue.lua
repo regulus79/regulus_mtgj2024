@@ -142,7 +142,7 @@ regulus2024_dialogue.dialogue = {
             responses = {next = "next"},
         },
         {
-            text = "In order to banish the darkness, you must travel to the Pedestal of Banishment. \nThere you will find the clues.",
+            text = "In order to banish the darkness, you must travel to the Pedestals of Banishment. \nThere you will find the clues.",
             responses = {next = "next"},
         },
         {

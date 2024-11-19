@@ -116,11 +116,12 @@ regulus2024_npcs.register_npc = function(name, def)
             collisionbox = def.collisionbox or {-0.3, 0, -0.3, 0.3, 1.8, 0.3},
             selectionbox = def.selectionbox or {-0.3, 0, -0.3, 0.3, 1.8, 0.3},
             pointable = def.pointable or true,
-            visual_size = def.collide_with_objects or vector.new(1, 1, 1),
-            textures = def.collide_with_objects or {"regulus2024_player_template.png"},
-            use_texture_alpha = def.collide_with_objects or true,
+            visual_size = def.visual_size or vector.new(1, 1, 1),
+            textures = def.textures or {"regulus2024_player_template.png"},
+            use_texture_alpha = def.use_texture_alpha or true,
             automatic_face_movement_dir = -90,
-            automatic_face_movement_max_rotation_per_sec = 360
+            automatic_face_movement_max_rotation_per_sec = 360,
+            backface_culling = def.backface_culling or false,
             --- PLEAE ADD MORE
         },
         _state = "idle",
@@ -401,3 +402,4 @@ minetest.register_node("regulus2024_npcs:waypoint_debug", {
 
 
 dofile(minetest.get_modpath("regulus2024_npcs") .. "/npcs.lua")
+dofile(minetest.get_modpath("regulus2024_npcs") .. "/darkness.lua")

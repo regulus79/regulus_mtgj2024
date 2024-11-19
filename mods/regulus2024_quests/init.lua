@@ -8,7 +8,7 @@ local quest_text_hud_id
 minetest.register_on_joinplayer(function(player)
     quest_text_hud_id = player:hud_add({
         type = "text",
-        text = "QUESTS",
+        text = "OBJECTIVES", -- used to be called quests, whatever
         number = 0xFFB930,
         position = {x = 1, y = 0},
         offset = {x = -100, y = 100},
@@ -17,9 +17,12 @@ minetest.register_on_joinplayer(function(player)
 end)
 
 regulus2024_quests.construct_quest_hud_text = function(player)
-    local text = {"QUESTS"}
+    local text = {"OBJECTIVES"}
     for questname, questdata in pairs(regulus2024_quests.get_active_quests(player)) do
-        table.insert(text, questdata.hud_text or regulus2024_quests.quests[questname].hud_text or nil)
+        local quest_title = questdata.hud_text or regulus2024_quests.quests[questname].hud_text or nil
+        if quest_title ~= nil and quest_title ~= "" then
+            table.insert(text, quest_title)
+        end
     end
     return table.concat(text, "\n")
 end

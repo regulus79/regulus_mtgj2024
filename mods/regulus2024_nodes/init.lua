@@ -35,7 +35,6 @@ minetest.register_node("regulus2024_nodes:dirt_with_grass1", {
         "regulus2024_dirt1.png",
         "regulus2024_dirt1.png^regulus2024_grass1_sideoverlay.png",
     },
-    light_source = 2,
     groups = {shovelable = 1},
 })
 
@@ -201,7 +200,7 @@ end
 
 minetest.register_node("regulus2024_nodes:pedestal_finder", {
     description = "Staff of Finding",
-    tiles = {"regulus2024_wood3.png"},
+    tiles = {"regulus2024_wood3.png^[transformR90"},
     drawtype = "nodebox",
     node_box = {
         type = "fixed",

@@ -117,7 +117,6 @@ regulus2024_dialogue.construct_dialogue_formspec = function(player, dialogue_lin
             i = i + 1
         end
     end
-    print(dump(responses_formspec_table))
 
     local formspec = table.concat({
         "formspec_version[7]",

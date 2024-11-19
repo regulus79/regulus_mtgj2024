@@ -36,7 +36,7 @@ local flats = {
                 rough_size = 10,
             },
             {
-                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Libraryv3.mts",
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Libraryv5.mts",
                 rotation = "0",
                 offset = vector.new(-42,0,-10),
                 rough_size = 50,
@@ -229,7 +229,7 @@ local flats = {
         buffer = 50,
         buildings = {
             {
-                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Pedestalsv1.mts",
+                schem = minetest.get_modpath("regulus2024_mapgen") .. "/schems/Pedestalsv2.mts",
                 rotation = "0",
                 offset = vector.new(-5,1,-5),
                 rough_size = 15,

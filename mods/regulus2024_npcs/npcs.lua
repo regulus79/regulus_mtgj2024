@@ -21,6 +21,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:mainnpc", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 8,
     _lose_notice_dist = 12,
+    textures = {"regulus2024_villager_skin4.png"},
     extra_on_activate = function(self)
         self._general_walk_target = self.object:get_pos()
     end,
@@ -52,6 +53,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:sidenpc1", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 1,
     _lose_notice_dist = 5,
+    textures = {"regulus2024_villager_skin3.png"},
     extra_on_activate = function(self)
         self._general_walk_target = self.object:get_pos()
     end,
@@ -81,6 +83,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:sidenpc2", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 1,
     _lose_notice_dist = 5,
+    textures = {"regulus2024_villager_skin2.png"},
     extra_on_activate = function(self)
         self._general_walk_target = self.object:get_pos()
     end,
@@ -115,6 +118,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:marketnpc1", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 4,
     _lose_notice_dist = 5,
+    textures = {"regulus2024_villager_skin1.png"},
     extra_on_activate = function(self)
         self._awake_time = {wake_up = 0.25 + math.random()*0.1 - 0.05, fall_asleep = 0.75 + math.random()*0.1 - 0.05}
     end,
@@ -129,6 +133,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:marketnpc2", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 4,
     _lose_notice_dist = 5,
+    textures = {"regulus2024_villager_skin1.png"},
     extra_on_activate = function(self)
         self._awake_time = {wake_up = 0.25 + math.random()*0.1 - 0.05, fall_asleep = 0.75 + math.random()*0.1 - 0.05}
     end,
@@ -143,6 +148,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:marketnpc3", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 4,
     _lose_notice_dist = 5,
+    textures = {"regulus2024_villager_skin1.png"},
     extra_on_activate = function(self)
         self._awake_time = {wake_up = 0.25 + math.random()*0.1 - 0.05, fall_asleep = 0.75 + math.random()*0.1 - 0.05}
     end,
@@ -157,6 +163,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:marketnpc4", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 4,
     _lose_notice_dist = 5,
+    textures = {"regulus2024_villager_skin1.png"},
     extra_on_activate = function(self)
         self._awake_time = {wake_up = 0.25 + math.random()*0.1 - 0.05, fall_asleep = 0.75 + math.random()*0.1 - 0.05}
     end,
@@ -187,6 +194,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:villagenpc1", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 2,
     _lose_notice_dist = 5,
+    textures = {"regulus2024_villager_skin1.png"},
     extra_on_activate = function(self)
         self._awake_time = {wake_up = 0.25 + math.random()*0.1 - 0.05, fall_asleep = 0.75 + math.random()*0.1 - 0.05}
         -- Randomize scale
@@ -256,6 +264,7 @@ regulus2024_npcs.register_npc("regulus2024_npcs:oldman", {
     _average_time_per_look_update = 3,
     _gain_notice_dist = 8,
     _lose_notice_dist = 12,
+    textures = {"regulus2024_wizard_skin.png"},
     extra_on_activate = function(self)
         self._general_walk_target = self.object:get_pos()
     end,
@@ -284,6 +293,9 @@ regulus2024_npcs.register_npc("regulus2024_npcs:oldman", {
                 self._show_info_marker(self, player)
                 self._data.talk_to_wizard_in_library = true
             end
+            if regulus2024_quests.get_completed_quests(player)["talk_to_wizard_in_library"] then --idk why I need to do this help
+                self._force_disappear = true
+            end 
         end
     end,
     extra_on_rightclick = function(self, clicker)
