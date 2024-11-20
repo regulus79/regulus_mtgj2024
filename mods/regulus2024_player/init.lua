@@ -35,7 +35,7 @@ end)
 
 minetest.register_globalstep(function(dtime)
     if regulus2024_player.timeofday then
-        local new_timeofday = minetest.get_timeofday() + (regulus2024_player.timeofday - minetest.get_timeofday()) * math.sqrt(dtime) -- is the sqrt right? idk
+        local new_timeofday = minetest.get_timeofday() + (regulus2024_player.timeofday - minetest.get_timeofday()) * (1 - 0.1 ^ (dtime / 0.25)) -- yeehaw, math is cool
         minetest.set_timeofday(new_timeofday)
         local brightness = 1 - math.abs(new_timeofday - 0.5) * 2
         if not regulus2024_player.normal_sky then

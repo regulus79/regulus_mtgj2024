@@ -5,9 +5,9 @@ local spb = regulus2024_music.seconds_per_beat
 
 regulus2024_cutscenes.intro_text = {
     {text = "", length = 2},
-    {text = "The world was filled with darkness.", length = 4},
+    {text = "The world was filled with darkness.", length = 6},
     {text = "", length = 2},
-    {text = "And the darkness could not be defeated.", length = 4},
+    {text = "And the darkness could not be defeated.", length = 6},
     {text = "", length = 2},
     {text = "Not even the greatest wizard or warrior could challenge it.", length = 6},
     {text = "", length = 2},
@@ -52,7 +52,7 @@ regulus2024_cutscenes.darkness_cutscene2 = {
 
 regulus2024_cutscenes.outro_text = {
     {text = "", length = 2},
-    {text = "You have done it.", length = 2},
+    {text = "You have done it.", length = 4},
     {text = "", length = 2},
     {text = "The darkness is no more.", length = 4},
     {text = "", length = 2},
@@ -110,11 +110,14 @@ end
 regulus2024_cutscenes.start_darkness_cutscene1 = function(player)
     regulus2024_player.timeofday = 0.79
     regulus2024_player.lock_player_movement(player)
-    local look_dir_horizontal = player:get_look_dir()
-    look_dir_horizontal.y = 0
-    look_dir_horizontal = look_dir_horizontal:normalize()
-    local darkness_pos = player:get_pos() + look_dir_horizontal * 10 + vector.new(0, 3, 0)
-    local darkness_obj = minetest.add_entity(darkness_pos, "regulus2024_npcs:darkness")
+    local darkness_obj
+    minetest.after(0.5, function()
+        local look_dir_horizontal = player:get_look_dir()
+        look_dir_horizontal.y = 0
+        look_dir_horizontal = look_dir_horizontal:normalize()
+        local darkness_pos = player:get_pos() + look_dir_horizontal * 10 + vector.new(0, 3, 0)
+        darkness_obj = minetest.add_entity(darkness_pos, "regulus2024_npcs:darkness")
+    end)
     local afterward = function()
         darkness_obj:remove()
         minetest.after(2, function()
