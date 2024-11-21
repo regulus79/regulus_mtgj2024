@@ -1,10 +1,11 @@
 
 regulus2024_cutscenes = {}
 
+regulus2024_cutscenes.active_cutscene = nil
+
 local spb = regulus2024_music.seconds_per_beat
 
 regulus2024_cutscenes.intro_text = {
-    {text = "", length = 2},
     {text = "The world was filled with darkness.", length = 6},
     {text = "", length = 2},
     {text = "And the darkness could not be defeated.", length = 6},
@@ -61,6 +62,7 @@ regulus2024_cutscenes.outro_text = {
 }
 
 regulus2024_cutscenes.start_cutscene = function(player, cutscene_id, afterward, blackscreen)
+    regulus2024_cutscenes.active_cutscene = cutscene_id
     local blackscreen_id
     if blackscreen then
         blackscreen_id = player:hud_add({
@@ -95,6 +97,7 @@ regulus2024_cutscenes.start_cutscene = function(player, cutscene_id, afterward, 
             player:hud_remove(blackscreen_id)
         end
         afterward()
+        regulus2024_cutscenes.active_cutscene = nil
     end)
 end
 
