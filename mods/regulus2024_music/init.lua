@@ -28,8 +28,8 @@ regulus2024_music.music = {
     },
     default = {
         spec = {
-            name = "village_theme1",
-            gain = 0.05,
+            name = "village_theme2",
+            gain = 0.2,
         },
         parameters = {
             loop = true,
@@ -74,6 +74,8 @@ minetest.register_globalstep(function()
             regulus2024_music.set_music(player, "in_the_library")
         elseif regulus2024_cutscenes.active_cutscene == "darkness_cutscene1" or regulus2024_cutscenes.active_cutscene == "darkness_cutscene2" then
             regulus2024_music.set_music(player, "darkness")
+        elseif regulus2024_quests.get_completed_quests(player).banish_the_darkness then
+            regulus2024_music.set_music(player, "in_the_library")
         else
             regulus2024_music.set_music(player, "default")
         end

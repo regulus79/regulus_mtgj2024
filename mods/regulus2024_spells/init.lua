@@ -5,6 +5,7 @@ regulus2024_spells = {}
 
 regulus2024_spells.spells = {
     reveal = {
+        sound = "arp",
         phrase = "reveal et reveala",
         func = function(player)
             minetest.set_node(vector.new(-26, 1, -2), {name = "regulus2024_nodes:stonebrick_walkthrough2"})
@@ -34,6 +35,7 @@ regulus2024_spells.spells = {
         end
     },
     banish = {
+        sound = "arp_end",
         phrase = "banisha darknessa",
         func = function(player)
             local books_on_pedestals = {
@@ -93,6 +95,9 @@ minetest.register_on_chat_message(function(name, message)
         if spell.phrase == message then
             spell.func(player)
             regulus2024_quests.on_cast_spell(player, spell_id)
+            minetest.sound_play({
+                name = spell.sound,
+            })
             minetest.chat_send_all("<player> " .. minetest.colorize("#00AAFF", message))
             return true
         end
