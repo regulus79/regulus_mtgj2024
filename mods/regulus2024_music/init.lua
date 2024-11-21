@@ -19,6 +19,7 @@ regulus2024_music.music = {
         spec = {
             name = "darkness",
             gain = 1.0,
+            pitch = -2,
         },
         parameters = {
             loop = true,

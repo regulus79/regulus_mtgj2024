@@ -8,7 +8,7 @@ regulus2024_spells.spells = {
         phrase = "reveal et reveala",
         sound_spec = {
             name = "arp",
-            gain = 0.00001,-- Nevermind
+            gain = 0.5,
         },
         func = function(player)
             minetest.set_node(vector.new(-26, 1, -2), {name = "regulus2024_nodes:stonebrick_walkthrough2"})
@@ -41,7 +41,7 @@ regulus2024_spells.spells = {
         phrase = "banisha darknessa",
         sound_spec = {
             name = "arp_end",
-            gain = 0.5,
+            gain = 0.2,
         },
         func = function(player)
             local books_on_pedestals = {
