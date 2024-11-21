@@ -96,8 +96,7 @@ regulus2024_cutscenes.start_cutscene = function(player, cutscene_id, afterward, 
         if blackscreen then
             player:hud_remove(blackscreen_id)
         end
-        afterward()
-        regulus2024_cutscenes.active_cutscene = nil
+        afterward() -- make sure to set active_cutscene to nil in the afterward function
     end)
 end
 
@@ -105,6 +104,7 @@ regulus2024_cutscenes.start_intro = function(player)
     local afterward = function()
         player:set_pos(vector.new(5,0.5,44))
         player:set_look_horizontal(math.pi)
+        regulus2024_cutscenes.active_cutscene = nil
     end
     regulus2024_cutscenes.start_cutscene(player, "intro_text", afterward, true)
 end
@@ -126,6 +126,7 @@ regulus2024_cutscenes.start_darkness_cutscene1 = function(player)
         minetest.after(2, function()
             regulus2024_player.timeofday = 0.3
             regulus2024_player.unlock_player_movement(player)
+            regulus2024_cutscenes.active_cutscene = nil
         end)
     end
     regulus2024_cutscenes.start_cutscene(player, "darkness_cutscene1", afterward, false)
@@ -144,6 +145,7 @@ regulus2024_cutscenes.start_darkness_cutscene2 = function(player)
         darkness_obj:remove()
         minetest.after(2, function()
             regulus2024_player.timeofday = 0.3
+            regulus2024_cutscenes.active_cutscene = nil
         end)
         player:set_hp(1, "punch")
         player:add_velocity(vector.new(0, 10, 0) - player:get_look_dir() * 5)
