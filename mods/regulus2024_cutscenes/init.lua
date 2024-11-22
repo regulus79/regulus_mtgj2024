@@ -12,7 +12,7 @@ regulus2024_cutscenes.intro_text = {
     {text = "", length = 2},
     {text = "Not even the greatest wizard or warrior could challenge it.", length = 6},
     {text = "", length = 2},
-    {text = "But legends say that there is a way to bansh it forever.", length = 6},
+    {text = "But legends say that there is a way to banish it forever.", length = 6},
     {text = "", length = 2},
     {text = "Somewhere in the village, there is a magical library.", length = 6},
     {text = "", length = 2},
