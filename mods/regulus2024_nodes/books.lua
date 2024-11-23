@@ -428,6 +428,10 @@ for bookid, bookcontent in pairs(books) do
         stack_max = 1,
         groups = {breakable_by_hand = 1, book = 1},
         on_place = function(itemstack, placer, pointed_thing)
+            if minetest.get_item_group(minetest.get_node(pointed_thing.under).name, "book") ~= 0 then
+                show_book_page(placer, bookid, 1)
+                return nil
+            end
             if pointed_thing.above - pointed_thing.under == vector.new(0,1,0) then
                 minetest.item_place(ItemStack("regulus2024_nodes:book_open_" .. bookid), placer, pointed_thing)
                 --minetest.get_meta(pointed_thing.above):set_string("infotext", bookcontent.title)
