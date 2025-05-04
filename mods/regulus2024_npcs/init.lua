@@ -320,30 +320,30 @@ regulus2024_npcs.register_npc = function(name, def)
                 local angle_right = (get_leg_back_and_forth(self._walk_cycle_position + 0.5) - 0.25)* math.pi
 
                 self.object:set_bone_override("LegL", {
-                    rotation = {vec = vector.new(angle_left, 0, 0), absolute = true}
+                    rotation = {vec = vector.new(angle_left + math.pi, 0, 0), absolute = true}
                 })
                 self.object:set_bone_override("LegR", {
-                    rotation = {vec = vector.new(angle_right, 0, 0), absolute = true}
+                    rotation = {vec = vector.new(angle_right + math.pi, 0, 0), absolute = true}
                 })
                 self.object:set_bone_override("ArmL", {
-                    rotation = {vec = vector.new(angle_right/2, 0, 0), absolute = true}
+                    rotation = {vec = vector.new(angle_right/2 + math.pi, 0, 0), absolute = true}
                 })
                 self.object:set_bone_override("ArmR", {
-                    rotation = {vec = vector.new(angle_left/2, 0, 0), absolute = true}
+                    rotation = {vec = vector.new(angle_left/2 + math.pi, 0, 0), absolute = true}
                 })
             else
                 self.object:set_velocity(vector.new(0, self.object:get_velocity().y, 0)) --- BAd idea, not good, migth want to use vel in other code
                 self.object:set_bone_override("LegL", {
-                    rotation = {vec = vector.new(0, 0, 0), absolute = true, interpolation = 0.25}
+                    rotation = {vec = vector.new(0 + math.pi, 0, 0), absolute = true, interpolation = 0.25}
                 })
                 self.object:set_bone_override("LegR", {
-                    rotation = {vec = vector.new(0, 0, 0), absolute = true, interpolation = 0.25}
+                    rotation = {vec = vector.new(0 + math.pi, 0, 0), absolute = true, interpolation = 0.25}
                 })
                 self.object:set_bone_override("ArmL", {
-                    rotation = {vec = vector.new(0, 0, 0), absolute = true, interpolation = 0.25}
+                    rotation = {vec = vector.new(0 + math.pi, 0, 0), absolute = true, interpolation = 0.25}
                 })
                 self.object:set_bone_override("ArmR", {
-                    rotation = {vec = vector.new(0, 0, 0), absolute = true, interpolation = 0.25}
+                    rotation = {vec = vector.new(0 + math.pi, 0, 0), absolute = true, interpolation = 0.25}
                 })
             end
 
